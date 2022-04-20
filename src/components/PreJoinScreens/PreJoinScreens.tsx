@@ -2,7 +2,6 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
-import CreateOrJoinRoomScreen from './CreateOrJoinRoomScreen/CreateOrJoinRoomScreen';
 import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
@@ -18,8 +17,7 @@ export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
   const { URLRoomName } = useParams();
-  const [step, setStep] = useState(Steps.roomNameStep); // Original
-  // const [step, setStep] = useState(Steps.createOrJoinRoomStep); // this will need to be 'createOrJoinRoomStep'
+  const [step, setStep] = useState(Steps.roomNameStep);
 
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
@@ -58,15 +56,6 @@ export default function PreJoinScreens() {
   return (
     <IntroContainer>
       <MediaErrorSnackbar error={mediaError} />
-
-      {/*  */}
-      {/* {step === Steps.createOrJoinRoomStep && (
-        <CreateOrJoinRoomScreen
-          handleSubmit={handleSubmit}
-        />
-      )} */}
-      {/*  */}
-
       {step === Steps.roomNameStep && (
         <RoomNameScreen
           name={name}
