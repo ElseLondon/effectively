@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme, FormControlLabel, Switch } from '@material-ui/core';
+import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme, Switch } from '@material-ui/core';
 import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
+  textFieldAndSwitch: {
+    display: 'inline-block',
+  }
 }));
 
 interface RoomNameScreenProps {
@@ -101,13 +104,13 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
         </div>
 
         {/*  */}
-        <FormControlLabel 
-          control={<Switch checked={checked} onChange={handleChange} />} 
-          labelPlacement="start"
-          label="Set Meeting Duration & Agenda?"
-        />
+        <div>
+          <Typography className={classes.textFieldAndSwitch} variant="body1">Set Meeting Duration & Agenda?</Typography>
+          <Switch checked={checked} onChange={handleChange} />
+        </div>
 
-        <p>{checked ? <span>TRUE</span> : <span>FALSE</span>}</p>
+        {/* <p>{checked ? <span>TRUE</span> : <span>FALSE</span>}</p> */}
+
         {/* Input Label and Text Field for Room Duration */}
 
         {/* Dynamic List for Agenda Items: description|duration|order */}
