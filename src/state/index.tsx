@@ -78,6 +78,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
             user_identity,
             room_name,
             create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
+            // Room Details to go here, or create separate endpoint
           }),
         }).then(res => res.json());
       },

@@ -108,6 +108,11 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
         />
 
         <p>{checked ? <span>TRUE</span> : <span>FALSE</span>}</p>
+        {/* Input Label and Text Field for Room Duration */}
+
+        {/* Dynamic List for Agenda Items: description|duration|order */}
+        {/* 2 Buttons to Add/Remove Agenda Items to/from List  */}
+
         {/*  */}
 
         <Grid container justifyContent="flex-end">
