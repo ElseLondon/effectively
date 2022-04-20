@@ -1,18 +1,15 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { useAppState } from '../../../state';
 import {
-  Box, 
   Button, 
-  FormControl,
+  Checkbox,
+  FormControlLabel,
   Grid, 
   InputLabel, 
   makeStyles, 
-  MenuItem,
-  Select,
-  Switch,
   TextField, 
   Theme, 
-  Typography
+  Typography,
 } from '@material-ui/core';
 
 
@@ -41,6 +38,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   textFieldAndSwitch: {
     display: 'inline-block',
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   }
 }));
 
@@ -118,32 +119,35 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
         </div>
 
         {/*  */}{/*  */}
-        {/* REDO THE FOLLOWING WITH ATTENTION TO V4 DOCUMENTATION! */}
         <div>
-          <Typography className={classes.textFieldAndSwitch} variant="body1">Set Meeting Duration & Agenda?</Typography>
-          <Switch checked={checked} onChange={handleChange} />
+          <FormControlLabel
+            control={<Checkbox checked={checked} onChange={handleChange} name="checkedA" />}
+            label="Set Meeting Duration & Agenda"
+          />
+
+          {/* FOR BELOW; */}
+          {/* ENSURE INPUT IS: >0 & <60 */}
+          {/* ADD DEFENSIVE ERROR HANDLING */}
+
+          {checked ? (
+            <div className={classes.textFieldContainer}>
+              <InputLabel shrink htmlFor="input-room-duration">
+                Duration
+              </InputLabel>
+              <TextField
+                autoCapitalize="false"
+                // id="input-room-duration"
+                variant="outlined"
+                // fullWidth
+                size="small"
+                // value={roomName}
+                // onChange={handleRoomNameChange}
+              />
+            </div>
+          ) : null}
         </div>
 
-        {checked ? (
-          <Box sx={{ width: 120 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Duration</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Duration"
-                // value={age}
-                // onChange={handleChange}
-              >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
-        ) : null}
-
-        {/* Input Label and Text Field for Room Duration */}
+        {/* AGENDA ITEMS & DURATION */}{/*  */}
         {/* Dynamic List for Agenda Items: description|duration|order */}
         {/* 2 Buttons to Add/Remove Agenda Items to/from List  */}
         {/*  */}{/*  */}
