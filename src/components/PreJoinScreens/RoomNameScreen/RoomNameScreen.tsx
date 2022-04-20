@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent } from 'react';
-import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme } from '@material-ui/core';
+import { Typography, makeStyles, TextField, Grid, Button, InputLabel, Theme, FormControlLabel, Switch } from '@material-ui/core';
 import { useAppState } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,6 +38,14 @@ interface RoomNameScreenProps {
 export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
+  // 
+  const [checked, setChecked] = React.useState(false); // change name to be more descriptive
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => { // change name to be more descriptive
+    console.log('Switch Changed', event.target.checked);
+    setChecked(event.target.checked);
+  };
+  // 
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -91,6 +99,17 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
             />
           </div>
         </div>
+
+        {/*  */}
+        <FormControlLabel 
+          control={<Switch checked={checked} onChange={handleChange} />} 
+          labelPlacement="start"
+          label="Set Meeting Duration & Agenda?"
+        />
+
+        <p>{checked ? <span>TRUE</span> : <span>FALSE</span>}</p>
+        {/*  */}
+
         <Grid container justifyContent="flex-end">
           <Button
             variant="contained"
