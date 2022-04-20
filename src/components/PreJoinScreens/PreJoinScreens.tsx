@@ -8,7 +8,6 @@ import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 export enum Steps {
-  // createOrJoinRoomStep,
   roomNameStep,
   deviceSelectionStep,
 }
@@ -44,7 +43,6 @@ export default function PreJoinScreens() {
   }, [getAudioAndVideoTracks, step, mediaError]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    console.log('CONTINUE PRESSED')
     event.preventDefault();
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     if (!window.location.origin.includes('twil.io')) {
