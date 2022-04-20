@@ -2,12 +2,14 @@ import React, { useState, useEffect, FormEvent } from 'react';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import MediaErrorSnackbar from './MediaErrorSnackbar/MediaErrorSnackbar';
+import CreateOrJoinRoomScreen from './CreateOrJoinRoomScreen/CreateOrJoinRoomScreen';
 import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 
 export enum Steps {
+  // createOrJoinRoomStep,
   roomNameStep,
   deviceSelectionStep,
 }
@@ -16,7 +18,8 @@ export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
   const { URLRoomName } = useParams();
-  const [step, setStep] = useState(Steps.roomNameStep);
+  const [step, setStep] = useState(Steps.roomNameStep); // Original
+  // const [step, setStep] = useState(Steps.createOrJoinRoomStep); // this will need to be 'createOrJoinRoomStep'
 
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
@@ -43,6 +46,7 @@ export default function PreJoinScreens() {
   }, [getAudioAndVideoTracks, step, mediaError]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    console.log('CONTINUE PRESSED')
     event.preventDefault();
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     if (!window.location.origin.includes('twil.io')) {
@@ -54,6 +58,15 @@ export default function PreJoinScreens() {
   return (
     <IntroContainer>
       <MediaErrorSnackbar error={mediaError} />
+
+      {/*  */}
+      {/* {step === Steps.createOrJoinRoomStep && (
+        <CreateOrJoinRoomScreen
+          handleSubmit={handleSubmit}
+        />
+      )} */}
+      {/*  */}
+
       {step === Steps.roomNameStep && (
         <RoomNameScreen
           name={name}

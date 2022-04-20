@@ -27,6 +27,12 @@ const context: ServerlessContext = {
 
 export function createExpressHandler(serverlessFunction: ServerlessFunction) {
   return (req: Request, res: Response) => {
+    // 
+    // Get Room Details from req.body
+    // store them in local memory somehow (or use DB if necessary)
+    // For next token fetch, if named room has Room Details, return them as well?
+    // Could create a separate endpoint for checking whether a room has rules 
+    // 
     serverlessFunction(context, req.body, (_, serverlessResponse) => {
       const { statusCode, headers, body } = serverlessResponse;
 
