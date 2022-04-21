@@ -1,12 +1,17 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { useAppState } from '../../../state';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import {
   Button, 
   Checkbox,
+  IconButton,
+  FormControl,
   FormControlLabel,
-  Grid, 
   InputLabel, 
   makeStyles, 
+  MenuItem,
+  Select,
   TextField, 
   Theme, 
   Typography,
@@ -31,7 +36,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   textFieldContainer: {
     width: '100%',
   },
+  durationCheckboxAndSelectContainer: {
+    marginBottom: "3em",
+    display: 'flex',
+    flexDirection: 'row',
+  },
   continueButton: {
+    position: 'absolute',
+    bottom: '1em',
+    right: '1em',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -42,6 +55,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
+  },
+  formControlLabel: {
+    margin: '0',
+    marginBottom: '1em',
+  },
+  agendaItemForm: {
+    display: 'flex',
+    flexDirection: 'row',
   }
 }));
 
@@ -56,14 +77,12 @@ interface RoomNameScreenProps {
 export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
-  // 
-  const [checked, setChecked] = React.useState(false); // change name to be more descriptive: setDurationAndAgenda
+  const [checked, setChecked] = React.useState(false); // change name to be more descriptive
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => { // change name to be more descriptive: handleSettingDurationAndAgenda
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => { // change name to be more descriptive
     console.log('Switch Changed', event.target.checked);
     setChecked(event.target.checked);
   };
-  // 
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -118,51 +137,68 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
           </div>
         </div>
 
-        {/*  */}{/*  */}
-        <div>
+        <div className={classes.durationCheckboxAndSelectContainer}>
           <FormControlLabel
+            className={classes.formControlLabel}
             control={<Checkbox checked={checked} onChange={handleChange} name="checkedA" />}
-            label="Set Meeting Duration & Agenda"
+            label="Set Duration"
+            labelPlacement="start"
           />
 
-          {/* FOR BELOW; */}
-          {/* ENSURE INPUT IS: >0 & <60 */}
-          {/* ADD DEFENSIVE ERROR HANDLING */}
-
           {checked ? (
-            <div className={classes.textFieldContainer}>
+            <FormControl className={classes.formControl}>
               <InputLabel shrink htmlFor="input-room-duration">
                 Duration
               </InputLabel>
-              <TextField
-                autoCapitalize="false"
-                // id="input-room-duration"
-                variant="outlined"
-                // fullWidth
-                size="small"
-                // value={roomName}
-                // onChange={handleRoomNameChange}
-              />
-            </div>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                // value={age}
+                // onChange={handleChange}
+              >
+                <MenuItem value={15}>15</MenuItem>
+                <MenuItem value={30}>30</MenuItem>
+                <MenuItem value={45}>45</MenuItem>
+                <MenuItem value={60}>60</MenuItem>
+              </Select>
+            </FormControl>
           ) : null}
         </div>
+
+        {checked ? (
+          <div className={classes.agendaItemForm}>
+            <Typography variant="body1">Press the +/- Button to Add/Remove Agenda Points</Typography>
+            <IconButton 
+              color="primary"
+              aria-label="add agenda item"
+              onClick={() => { console.log('add agenda item'); }}
+            >
+              <AddCircleIcon />
+            </IconButton>
+            <IconButton
+              color="primary"
+              aria-label="remove agenda item"
+              onClick={() => { console.log('remove agenda item'); }}
+            >
+              <RemoveCircleIcon />
+            </IconButton>
+          </div>
+        ) : null}
 
         {/* AGENDA ITEMS & DURATION */}{/*  */}
         {/* Dynamic List for Agenda Items: description|duration|order */}
         {/* 2 Buttons to Add/Remove Agenda Items to/from List  */}
-        {/*  */}{/*  */}
+        
 
-        <Grid container justifyContent="flex-end">
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={!name || !roomName}
-            className={classes.continueButton}
-          >
-            Continue
-          </Button>
-        </Grid>
+        <Button
+          variant="contained"
+          type="submit"
+          color="primary"
+          disabled={!name || !roomName}
+          className={classes.continueButton}
+        >
+          Continue
+        </Button>
       </form>
     </>
   );
