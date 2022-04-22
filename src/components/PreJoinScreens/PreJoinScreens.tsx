@@ -15,6 +15,7 @@ export enum Steps {
 export default function PreJoinScreens() {
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
+  // @ts-ignore
   const { URLRoomName } = useParams();
   const [step, setStep] = useState(Steps.roomNameStep);
 

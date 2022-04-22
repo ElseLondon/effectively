@@ -1,26 +1,11 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { useAppState } from '../../../state';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import CreateIcon from '@material-ui/icons/Create';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {
-  Avatar,
-  Button, 
-  Checkbox,
-  IconButton,
-  FormControl,
-  FormControlLabel,
-  InputLabel, 
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  ListItemSecondaryAction,
-  makeStyles, 
-  MenuItem,
-  TextField, 
-  Theme, 
-  Typography,
+  Button, Checkbox, IconButton, FormControl, FormControlLabel,
+  InputLabel, List, ListItem, ListItemSecondaryAction,
+  makeStyles, MenuItem, TextField, Theme, Typography,
 } from '@material-ui/core';
 
 
@@ -39,11 +24,26 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: '1.5em 0 2em',
     },
   },
+  agendaItemInputContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    margin: '1.5em 0 0em',
+    '& div:not(:last-child)': {
+      marginRight: '1em',
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: '1.5em 0 2em',
+    },
+  },
   textFieldContainer: {
     width: '100%',
   },
+  durationTextFieldContainer: {
+    width: '50%'
+  },
   durationCheckboxAndSelectContainer: {
     marginBottom: "3em",
+    display: 'flex'
   },
   continueButton: {
     position: 'absolute',
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControlLabel: {
     margin: '0',
-    marginBottom: '1em',
+    marginTop: '1em',
   },
   agendaItemForm: {
     display: 'flex',
@@ -76,7 +76,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: 12
   },
   agendaItemList: {
-    paddingTop: 0
+  },
+  agendaItemDeleteIcon: {
+    marginTop: 40
+  },
+  agendaItemListContainer: {
+    marginTop: '-45px' // total hack fix this
   }
 }));
 
@@ -91,13 +96,10 @@ interface RoomNameScreenProps {
 export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
-  // 
-  const [chosenToSetDurationAndAgendaItems, setChosenToSetDurationAndAgendaItems] = React.useState(false); // change name to be more descriptive
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
-  const [duration, setDuration] = React.useState(0)
+
+  const [duration, setDuration] = React.useState(0);
   const [agendaItems, setAgendaItems] = React.useState(0);
-  // 
+  const [chosenToSetDurationAndAgendaItems, setChosenToSetDurationAndAgendaItems] = React.useState(false); // change name to be more descriptive
 
   const chooseToSetDurationAndAgendaItems = (event: React.ChangeEvent<HTMLInputElement>) => {
     setChosenToSetDurationAndAgendaItems(event.target.checked);
@@ -117,11 +119,15 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
   };
 
   const addAgendaItem = () => {
+    // this can be an array instead?
+    // 
     console.log('AgendaItems:', agendaItems + 1);
     setAgendaItems(agendaItems + 1);
   };
 
   const removeAgendaItem = () => {
+    // this can be an array instead?
+    // 
     console.log('AgendaItems:', agendaItems - 1);
     // this removes the last agenda item
     // it needs to remove the specifically clicked agenda item
@@ -187,24 +193,25 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
           <FormControlLabel
             className={classes.formControlLabel}
             control={<Checkbox checked={chosenToSetDurationAndAgendaItems} onChange={chooseToSetDurationAndAgendaItems} name="checkedA" />}
-            label="Set Duration"
+            label="Set Duration?"
             labelPlacement="start"
           />
 
           {chosenToSetDurationAndAgendaItems ? (
-            <FormControl variant="outlined" className={classes.formControl}>
+            <div className={classes.durationTextFieldContainer}>
+              <InputLabel shrink htmlFor="input-room-name">
+                Duration
+              </InputLabel>
               <TextField
-                value={duration}
-                onChange={handleDurationChange}
-                select
-                label="Duration"
-              >
-                <MenuItem value={15}>15</MenuItem>
-                <MenuItem value={30}>30</MenuItem>
-                <MenuItem value={45}>45</MenuItem>
-                <MenuItem value={60}>60</MenuItem>
-              </TextField>
-            </FormControl>
+                autoCapitalize="false"
+                id="input--duration"
+                variant="outlined"
+                fullWidth
+                size="small"
+                // value={roomName}
+                // onChange={handleRoomNameChange}
+              />
+            </div>
           ) : null}
         </div>
 
@@ -213,7 +220,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
             <div className={classes.agendaItemForm}>
               <Typography variant="body1">Press the + Button to Add Agenda Points</Typography>
               <IconButton 
-                color="primary"
+                color="secondary"
                 aria-label="add agenda item"
                 onClick={addAgendaItem}
                 className={classes.addAgendaItemButton}
@@ -221,21 +228,44 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
                 <AddCircleIcon />
               </IconButton>
             </div>
-            <div>
-              <List className={classes.agendaItemList} dense={dense}>
+            <div className={classes.agendaItemListContainer}>
+              <List className={classes.agendaItemList}>
                 {generate(
                   <ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <CreateIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary="Agenda Item"
-                      secondary={secondary ? 'Secondary text' : null}
-                    />
+                    <div className={classes.agendaItemInputContainer}>
+                      <div className={classes.textFieldContainer}>
+                        <InputLabel shrink htmlFor="input-room-name">
+                          Description
+                        </InputLabel>
+                        <TextField
+                          autoCapitalize="false"
+                          id="input-agenda-item-description"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          // value={roomName}
+                          // onChange={handleRoomNameChange}
+                        />
+                      </div>
+
+                      <div className={classes.textFieldContainer}>
+                        <InputLabel shrink htmlFor="input-room-name">
+                          Duration
+                        </InputLabel>
+                        <TextField
+                          autoCapitalize="false"
+                          id="input-agenda-item-duration"
+                          variant="outlined"
+                          fullWidth
+                          size="small"
+                          // value={roomName}
+                          // onChange={handleRoomNameChange}
+                        />
+                      </div>
+                    </div>
+
                     <ListItemSecondaryAction>
-                      <IconButton edge="end" aria-label="delete" onClick={removeAgendaItem}>
+                      <IconButton className={classes.agendaItemDeleteIcon} edge="end" aria-label="delete" onClick={removeAgendaItem}>
                         <DeleteIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
