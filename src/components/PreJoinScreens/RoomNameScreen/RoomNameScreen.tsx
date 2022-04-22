@@ -122,7 +122,9 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
   };
 
   const generate = (element: React.ReactElement) => {
-    return [0, 1, 2].map((value) =>
+    const agendaArray = [...Array(agendaItems).keys()];
+    
+    return agendaArray.map((value) =>
       React.cloneElement(element, {
         key: value,
       }),
@@ -214,24 +216,6 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
             </div>
             <div>
               <List className={classes.agendaItemList} dense={dense}>
-                {/* {Array(agendaItems).map(() => {
-                  (<ListItem>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <CreateIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary="Agenda Item"
-                      secondary={secondary ? 'Secondary text' : null}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton edge="end" aria-label="delete" onClick={() => { console.log('remove agenda item'); }}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>)
-                })} */}
                 {generate(
                   <ListItem>
                     <ListItemAvatar>
