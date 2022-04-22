@@ -116,9 +116,16 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
     setDuration(parseInt(event.target.value));
   };
 
-  const handleAgendaItemChange = () => {
+  const addAgendaItem = () => {
     console.log('AgendaItems:', agendaItems + 1);
-    setAgendaItems(agendaItems+1);
+    setAgendaItems(agendaItems + 1);
+  };
+
+  const removeAgendaItem = () => {
+    console.log('AgendaItems:', agendaItems - 1);
+    // this removes the last agenda item
+    // it needs to remove the specifically clicked agenda item
+    setAgendaItems(agendaItems - 1);
   };
 
   const generate = (element: React.ReactElement) => {
@@ -208,7 +215,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
               <IconButton 
                 color="primary"
                 aria-label="add agenda item"
-                onClick={handleAgendaItemChange}
+                onClick={addAgendaItem}
                 className={classes.addAgendaItemButton}
               >
                 <AddCircleIcon />
@@ -228,7 +235,7 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
                       secondary={secondary ? 'Secondary text' : null}
                     />
                     <ListItemSecondaryAction>
-                      <IconButton edge="end" aria-label="delete" onClick={() => { console.log('remove agenda item'); }}>
+                      <IconButton edge="end" aria-label="delete" onClick={removeAgendaItem}>
                         <DeleteIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
