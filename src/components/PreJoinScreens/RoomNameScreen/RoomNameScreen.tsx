@@ -52,19 +52,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
-  textFieldAndSwitch: {
-    display: 'inline-block',
-  },
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-    // bottom: 22
-  },
-  // 
+  }, 
   selectEmpty: {
     marginTop: theme.spacing(2),
   },
-  // 
   formControlLabel: {
     margin: '0',
     marginTop: '1em',
@@ -74,9 +68,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
   },
   addAgendaItemButton: {
-    bottom: 12
-  },
-  removeAgendaItemButton: {
     bottom: 12
   },
   agendaItemDeleteIcon: {
@@ -99,11 +90,9 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
   const { user } = useAppState();
 
   const [agendaItems, setAgendaItems] = React.useState(0);
-  const [chosenToAddDurationAndAgendaItems, setChosenToAddDurationAndAgendaItems] = React.useState(false);
+  const [durationCheckboxChecked, setDurationCheckboxChecked] = React.useState(false);
 
-  const chooseToSetDurationAndAgendaItems = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChosenToAddDurationAndAgendaItems(event.target.checked);
-  };
+  const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
@@ -111,6 +100,10 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
 
   const handleRoomNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRoomName(event.target.value);
+  };
+
+  const chooseToSetDurationAndAgendaItems = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setDurationCheckboxChecked(event.target.checked);
   };
 
   const handleDurationChange = (event: React.ChangeEvent<{ value: unknown }>) => {
@@ -121,7 +114,7 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
 
   const removeAgendaItem = () => setAgendaItems(agendaItems - 1);
 
-  const generate = (element: React.ReactElement) => {
+  const generate = (element: React.ReactElement) => { // does this need to be a function
     const agendaArray = [...Array(agendaItems).keys()];
     
     return agendaArray.map((value) =>
@@ -131,7 +124,13 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
     );
   };
 
-  const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
+  const disableContinue = () => {
+    // Add Logic to see if CheckBox Checked & no duration//
+    // const checkboxCheckedAndDurationSelected = LOGIC
+    // durationCheckboxChecked && (duration > 0)
+
+    return !name || !roomName // || !checkboxCheckedAndDurationSelected
+  }
 
   return (
     <>
@@ -179,15 +178,15 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
         <div className={classes.durationCheckboxAndSelectContainer}>
           <FormControlLabel
             className={classes.formControlLabel}
-            control={<Checkbox checked={chosenToAddDurationAndAgendaItems} onChange={chooseToSetDurationAndAgendaItems} name="checkedA" />}
+            control={<Checkbox checked={durationCheckboxChecked} onChange={chooseToSetDurationAndAgendaItems} name="checkedA" />}
             label="Set Duration?"
             labelPlacement="start"
           />
 
-          {chosenToAddDurationAndAgendaItems ? (
+          {durationCheckboxChecked ? (
             <div className={classes.durationTextFieldContainer}>
               <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <InputLabel id="demo-simple-select-label">Duration</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
@@ -206,7 +205,7 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
           ) : null}
         </div>
 
-        {chosenToAddDurationAndAgendaItems ? (
+        {durationCheckboxChecked ? (
           <>
             <div className={classes.agendaItemForm}>
               <Typography variant="body1">Press the + Button to Add Agenda Points</Typography>
@@ -270,7 +269,7 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
           variant="contained"
           type="submit"
           color="primary"
-          disabled={!name || !roomName}
+          disabled={disableContinue()}
           className={classes.continueButton}
         >
           Continue
