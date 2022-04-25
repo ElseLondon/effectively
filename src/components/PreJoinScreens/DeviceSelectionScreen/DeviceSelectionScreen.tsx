@@ -78,9 +78,9 @@ export default function DeviceSelectionScreen({
 
   const handleJoin = async () => {
     const endpoint = '/saveMeetingAgendaDetails'
-    const storeMeetingAgendaDetails = duration > 0;
+    const saveMeetingAgendaDetails = duration > 0;
 
-    if (storeMeetingAgendaDetails) {
+    if (saveMeetingAgendaDetails) {
       const result = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -92,7 +92,7 @@ export default function DeviceSelectionScreen({
         }),
       }).then(res => res.json());
 
-      console.log('storeMeetingAgendaDetails', storeMeetingAgendaDetails);
+      console.log('saveMeetingAgendaDetails', saveMeetingAgendaDetails);
       console.log('result', result);
     };
 
