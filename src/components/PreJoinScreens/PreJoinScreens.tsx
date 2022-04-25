@@ -6,6 +6,7 @@ import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { AgendaItem } from './RoomNameScreen/RoomNameScreen';
 
 export enum Steps {
   roomNameStep,
@@ -22,6 +23,8 @@ export default function PreJoinScreens() {
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
   const [duration, setDuration] = useState<number>(0);
+  const [durationCheckboxChecked, setDurationCheckboxChecked] = useState<boolean | undefined>(false);
+  const [agendaItems, setAgendaItems] = useState<Array<AgendaItem>>([]);
 
   const [mediaError, setMediaError] = useState<Error>();
 
@@ -50,6 +53,7 @@ export default function PreJoinScreens() {
     console.log(name);
     console.log(roomName);
     console.log(duration);
+    console.log(agendaItems);
     // //
     // 
 
@@ -69,9 +73,13 @@ export default function PreJoinScreens() {
           name={name}
           roomName={roomName}
           duration={duration}
+          durationCheckboxChecked={durationCheckboxChecked}
+          agendaItems={agendaItems}
           setName={setName}
           setRoomName={setRoomName}
           setDuration={setDuration}
+          setDurationCheckboxChecked={setDurationCheckboxChecked}
+          setAgendaItems={setAgendaItems}
           handleSubmit={handleSubmit}
         />
       )}

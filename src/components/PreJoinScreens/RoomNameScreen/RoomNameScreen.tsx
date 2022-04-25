@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { ChangeEvent, FormEvent } from 'react';
 import { useAppState } from '../../../state';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   agendaItemInputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: '1.5em 0 0em', // can we somehow copy above styling and just add for this field
+    margin: '1.5em 0 0em',
     '& div:not(:last-child)': {
       marginRight: '1em',
     },
@@ -75,29 +75,43 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface RoomNameScreenProps {
-  name: string;
-  roomName: string;
-  duration: number;
-  setName: (name: string) => void;
-  setRoomName: (roomName: string) => void;
-  setDuration: (duration: number) => void;
-  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
-}
-
-interface AgendaItem {
+export interface AgendaItem {
   description: string;
   duration: number;
 }
 
-export default function RoomNameScreen({ name, roomName, duration, setName, setRoomName, setDuration, handleSubmit }: RoomNameScreenProps) {
+interface RoomNameScreenProps {
+  name: string;
+  roomName: string;
+  duration: number;
+  durationCheckboxChecked: boolean | undefined;
+  agendaItems: AgendaItem[];
+  setName: (name: string) => void;
+  setRoomName: (roomName: string) => void;
+  setDuration: (duration: number) => void;
+  setDurationCheckboxChecked: (checked: boolean | undefined) => void;
+  setAgendaItems: (agendaItems: AgendaItem[]) => void;
+  handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+
+
+export default function RoomNameScreen({ 
+  name, 
+  roomName, 
+  duration, 
+  durationCheckboxChecked, 
+  agendaItems, 
+  setName,
+  setRoomName, 
+  setDuration, 
+  setDurationCheckboxChecked, 
+  setAgendaItems, 
+  handleSubmit
+}: RoomNameScreenProps) {
   const classes = useStyles();
+
   const { user } = useAppState();
-
-  // in general might be worth lifting state to PreJoinScreens
-  const [durationCheckboxChecked, setDurationCheckboxChecked] = useState<boolean | undefined>(false);
-  const [agendaItems, setAgendaItems] = useState<Array<AgendaItem>>([]);
-
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -117,13 +131,13 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
   };
 
   const addAgendaItem = () => {
-    const incrementedDescriptions = [...agendaItems]
+    const incrementedDescriptions = [...agendaItems];
     incrementedDescriptions.push({ description : '', duration: 0 });
     setAgendaItems(incrementedDescriptions);
   };
 
   const removeAgendaItem = () => {
-    const decrementedDescriptions = [...agendaItems]
+    const decrementedDescriptions = [...agendaItems];
     decrementedDescriptions.pop();
     setAgendaItems(decrementedDescriptions);
   };
@@ -132,21 +146,27 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
     const agendaItemsWithUpdatedDescription = [...agendaItems];
     agendaItemsWithUpdatedDescription[agendaItemIndex].description = event.target.value;
     setAgendaItems(agendaItemsWithUpdatedDescription);
-
-    console.log('handleAgendaItemDescriptionChange|agendaItems', agendaItemsWithUpdatedDescription); //
+    console.log('!*!', agendaItemsWithUpdatedDescription); //
   };
 
   const handleAgendaItemDurationChange = (agendaItemIndex: number) => (event: ChangeEvent<HTMLInputElement>) => {
-    console.log('agendaItemIndex', agendaItemIndex);
-    console.log('event.target.value', event.target.value);
+    const agendaItemsWithUpdatedDuration = [...agendaItems];
+    agendaItemsWithUpdatedDuration[agendaItemIndex].duration = parseInt(event.target.value);
+    setAgendaItems(agendaItemsWithUpdatedDuration);
+    console.log('!*!', agendaItemsWithUpdatedDuration); //
   }
 
 
   const disableContinue = () => {
-    const checkboxCheckedAndDurationSelected = durationCheckboxChecked && (duration > 0)
-    // Add checks for All Present Agenda Item Fields // 
-    // - basically agendaItems cannot be array of empty strings //
-    return !name || !roomName || !checkboxCheckedAndDurationSelected
+    const checkboxCheckedAndDurationSelected = durationCheckboxChecked && (duration > 0);
+    // //
+    //~Add Checks for All Present Agenda Item Fields~// 
+    // 
+    // const allAgendaItemDescriptionsComplete;           // agenda item descriptions entered
+    // const allAgendaItemDurationsComplete;              // agenda item durations entered
+    // const allAgendaItemDurationsEqualOverallDuration;  // agenda item durations come to same amount as overall duration
+    // //
+    return !name || !roomName || !checkboxCheckedAndDurationSelected;
   }
 
   return (
@@ -270,7 +290,7 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
                         InputLabelProps={{
                           shrink: true,
                         }}
-                        // value={roomName}
+                        value={agendaItems[agendaItemKey].duration}
                         onChange={handleAgendaItemDurationChange(agendaItemKey)}
                       />
                     </div>
