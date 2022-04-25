@@ -48,15 +48,6 @@ export default function PreJoinScreens() {
   }, [getAudioAndVideoTracks, step, mediaError]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    // 
-    // TESTING //
-    console.log(name);
-    console.log(roomName);
-    console.log(duration);
-    console.log(agendaItems);
-    // //
-    // 
-
     event.preventDefault();
     // If this app is deployed as a twilio function, don't change the URL because routing isn't supported.
     if (!window.location.origin.includes('twil.io')) {
@@ -85,7 +76,14 @@ export default function PreJoinScreens() {
       )}
 
       {step === Steps.deviceSelectionStep && (
-        <DeviceSelectionScreen name={name} roomName={roomName} setStep={setStep} />
+        <DeviceSelectionScreen
+          name={name}
+          roomName={roomName}
+          duration={duration}
+          durationCheckboxChecked={durationCheckboxChecked}
+          agendaItems={agendaItems}
+          setStep={setStep}
+        />
       )}
     </IntroContainer>
   );

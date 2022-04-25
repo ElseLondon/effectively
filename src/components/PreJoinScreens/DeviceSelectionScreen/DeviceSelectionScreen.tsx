@@ -9,6 +9,7 @@ import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton
 import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { AgendaItem } from '../RoomNameScreen/RoomNameScreen';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -55,10 +56,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface DeviceSelectionScreenProps {
   name: string;
   roomName: string;
+  duration: number;
+  durationCheckboxChecked: boolean | undefined;
+  agendaItems: AgendaItem[];
   setStep: (step: Steps) => void;
 }
 
-export default function DeviceSelectionScreen({ name, roomName, setStep }: DeviceSelectionScreenProps) {
+export default function DeviceSelectionScreen({ 
+  name,
+  roomName,
+  // duration,
+  // durationCheckboxChecked,
+  // agendaItems,
+  setStep
+}: DeviceSelectionScreenProps) {
+
   const classes = useStyles();
   const { getToken, isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
@@ -66,7 +78,21 @@ export default function DeviceSelectionScreen({ name, roomName, setStep }: Devic
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
   const handleJoin = () => {
-    getToken(name, roomName).then(({ token }) => {
+    // //
+    // console.log('--------------------DEVICE_SELECTION_SCREEN.TSX----------------------------');
+    // console.log('name', name);
+    // console.log('roomName', roomName);
+    // console.log('durationCheckboxChecked', durationCheckboxChecked);
+    // console.log('duration', duration);
+    // console.log('agendaItems', agendaItems);
+    // //
+    getToken(
+      name,
+      roomName,
+      // durationCheckboxChecked,
+      // duration,
+      // agendaItems
+    ).then(({ token }) => {
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
