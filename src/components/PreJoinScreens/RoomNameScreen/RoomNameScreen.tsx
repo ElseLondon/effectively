@@ -1,10 +1,10 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useAppState } from '../../../state';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {
-  Button, Checkbox, IconButton, FormControl, FormControlLabel, InputLabel, List, 
-  ListItem, ListItemSecondaryAction, makeStyles, MenuItem, Select, TextField, Theme, Typography,
+  Button, Checkbox, IconButton, FormControl, FormControlLabel, InputLabel, List, ListItem, 
+  ListItemSecondaryAction, makeStyles, MenuItem, Select, TextField, Theme, Typography,
 } from '@material-ui/core';
 
 
@@ -89,8 +89,10 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
   const classes = useStyles();
   const { user } = useAppState();
 
-  const [agendaItems, setAgendaItems] = React.useState(0);
-  const [durationCheckboxChecked, setDurationCheckboxChecked] = React.useState(false);
+  // in general might be worth lifting state to PreJoinScreens
+  const [durationCheckboxChecked, setDurationCheckboxChecked] = useState(false);
+  const [agendaItems, setAgendaItems] = useState(0);
+  const [descriptions, setDescriptions] = useState([]);
 
   const hasUsername = !window.location.search.includes('customIdentity=true') && user?.displayName;
 
@@ -102,34 +104,51 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
     setRoomName(event.target.value);
   };
 
-  const chooseToSetDurationAndAgendaItems = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const chooseToSetDurationAndAgendaItems = (event: ChangeEvent<HTMLInputElement>) => {
     setDurationCheckboxChecked(event.target.checked);
   };
 
-  const handleDurationChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleDurationChange = (event: ChangeEvent<{ value: unknown }>) => {
     setDuration(event.target.value as number);
   };
 
-  const addAgendaItem = () => setAgendaItems(agendaItems + 1);
-
-  const removeAgendaItem = () => setAgendaItems(agendaItems - 1);
-
-  const generate = (element: React.ReactElement) => { // does this need to be a function
-    const agendaArray = [...Array(agendaItems).keys()];
+  const addAgendaItem = () => {
+    const incrementedAgendaItems = agendaItems + 1;
+    // should add an empty string to the agenda descriptions array
+    // convert agenda items to array with that number of empty string entries
     
-    return agendaArray.map((value) =>
-      React.cloneElement(element, {
-        key: value,
-      }),
-    );
+    // We have to do checks and see if the array is empty or 
+    // has item descriptions first
+    // const res = [...Array(incrementedAgendaItems)].map((_, i) => {
+    //   return '';
+    // });
+
+    // console.log('incrementedAgendaItems', incrementedAgendaItems);
+    // console.log('res', res);
+    setAgendaItems(incrementedAgendaItems);
+  };
+
+  const removeAgendaItem = () => {
+    const reducedAgendaItems = agendaItems - 1;
+    // should remove an empty string to the agenda descriptions array
+    setAgendaItems(reducedAgendaItems);
+  };
+
+  const handleAgendaItemDescriptionChange = (agendaItemIndex: number) => (event: ChangeEvent<HTMLInputElement>) => {
+    console.log('handleAgendaItemDescriptionChange |agendaItemIndex|', agendaItemIndex);
+    console.log('handleAgendaItemDescriptionChange |event.target.value|', event.target.value);
+    // 
+    // 1. Create copy of existing descriptions array
+    // 2. Take the index
+    // 3. Insert new string value into correct Index of descriptions 
+    // 
   };
 
   const disableContinue = () => {
-    // Add Logic to see if CheckBox Checked & no duration//
-    // const checkboxCheckedAndDurationSelected = LOGIC
-    // durationCheckboxChecked && (duration > 0)
-
-    return !name || !roomName // || !checkboxCheckedAndDurationSelected
+    const checkboxCheckedAndDurationSelected = durationCheckboxChecked && (duration > 0)
+    // Add checks for All Present Agenda Item Fields // 
+    // - basically descriptions cannot be array of empty strings //
+    return !name || !roomName || !checkboxCheckedAndDurationSelected
   }
 
   return (
@@ -205,7 +224,7 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
           ) : null}
         </div>
 
-        {durationCheckboxChecked ? (
+        {durationCheckboxChecked && (duration > 0) ? (
           <>
             <div className={classes.agendaItemForm}>
               <Typography variant="body1">Press the + Button to Add Agenda Points</Typography>
@@ -220,8 +239,9 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
             </div>
 
             <List>
-              {generate(
-                <ListItem>
+              {[...Array(agendaItems).keys()].map((agendaItemNumber) => {
+                return (
+                  <ListItem key={agendaItemNumber}>
                   <div className={classes.agendaItemInputContainer}>
                     <div className={classes.textFieldContainer}>
                       <InputLabel shrink htmlFor="input-room-name">
@@ -233,8 +253,8 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
                         variant="outlined"
                         fullWidth
                         size="small"
-                        // value={roomName}
-                        // onChange={handleRoomNameChange}
+                        // value={roomName} value={descriptions[agendaItemKey]}
+                        onChange={handleAgendaItemDescriptionChange(agendaItemNumber)}
                       />
                     </div>
 
@@ -259,8 +279,9 @@ export default function RoomNameScreen({ name, roomName, duration, setName, setR
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
-                </ListItem>,
-              )}
+                </ListItem>
+                );
+              })}
             </List>
           </>
         ) : null}
