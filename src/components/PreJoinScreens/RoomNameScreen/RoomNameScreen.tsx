@@ -160,13 +160,19 @@ export default function RoomNameScreen({
   const disableContinue = () => {
     const checkboxCheckedAndDurationSelected = durationCheckboxChecked && (duration > 0);
     // //
+    // Allow for checkbox not being checked
+    // 
     //~Add Checks for All Present Agenda Item Fields~// 
     // 
     // const allAgendaItemDescriptionsComplete;           // agenda item descriptions entered
     // const allAgendaItemDurationsComplete;              // agenda item durations entered
     // const allAgendaItemDurationsEqualOverallDuration;  // agenda item durations come to same amount as overall duration
     // //
-    return !name || !roomName || !checkboxCheckedAndDurationSelected;
+    return !name || !roomName || durationCheckboxChecked;
+
+    // if (durationCheckboxChecked) return !name || !roomName
+    // else if (!durationCheckboxChecked)
+    // // check for !name, !roomName, and the rest listed above
   }
 
   return (
@@ -215,7 +221,7 @@ export default function RoomNameScreen({
         <div className={classes.durationCheckboxAndSelectContainer}>
           <FormControlLabel
             className={classes.formControlLabel}
-            control={<Checkbox checked={durationCheckboxChecked} onChange={chooseToSetDurationAndAgendaItems} name="checkedA" />}
+            control={<Checkbox checked={durationCheckboxChecked} onChange={chooseToSetDurationAndAgendaItems} name="checked" />}
             label="Set Duration?"
             labelPlacement="start"
           />
