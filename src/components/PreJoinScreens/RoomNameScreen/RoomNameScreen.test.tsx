@@ -14,8 +14,10 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        duration={10}
         setName={() => {}}
         setRoomName={() => {}}
+        setDuration={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -30,8 +32,10 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        duration={10}
         setName={() => {}}
         setRoomName={() => {}}
+        setDuration={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -54,8 +58,10 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        duration={10}
         setName={() => {}}
         setRoomName={() => {}}
+        setDuration={() => {}}
         handleSubmit={() => {}}
       />
     );

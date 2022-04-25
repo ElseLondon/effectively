@@ -3,9 +3,8 @@ import { useAppState } from '../../../state';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {
-  Button, Checkbox, IconButton, FormControl, FormControlLabel,
-  InputLabel, List, ListItem, ListItemSecondaryAction,
-  makeStyles, MenuItem, TextField, Theme, Typography,
+  Button, Checkbox, IconButton, FormControl, FormControlLabel, InputLabel, List, 
+  ListItem, ListItemSecondaryAction, makeStyles, MenuItem, Select, TextField, Theme, Typography,
 } from '@material-ui/core';
 
 
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   agendaItemInputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: '1.5em 0 0em',
+    margin: '1.5em 0 0em', // can we somehow copy above styling and just add for this field
     '& div:not(:last-child)': {
       marginRight: '1em',
     },
@@ -59,8 +58,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-    bottom: 22
+    // bottom: 22
   },
+  // 
+  selectEmpty: {
+    marginTop: theme.spacing(2),
+  },
+  // 
   formControlLabel: {
     margin: '0',
     marginTop: '1em',
@@ -75,34 +79,30 @@ const useStyles = makeStyles((theme: Theme) => ({
   removeAgendaItemButton: {
     bottom: 12
   },
-  agendaItemList: {
-  },
   agendaItemDeleteIcon: {
     marginTop: 40
   },
-  agendaItemListContainer: {
-    marginTop: '-45px' // total hack fix this
-  }
 }));
 
 interface RoomNameScreenProps {
   name: string;
   roomName: string;
+  duration: number;
   setName: (name: string) => void;
   setRoomName: (roomName: string) => void;
+  setDuration: (duration: number) => void;
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-export default function RoomNameScreen({ name, roomName, setName, setRoomName, handleSubmit }: RoomNameScreenProps) {
+export default function RoomNameScreen({ name, roomName, duration, setName, setRoomName, setDuration, handleSubmit }: RoomNameScreenProps) {
   const classes = useStyles();
   const { user } = useAppState();
 
-  const [duration, setDuration] = React.useState(0);
   const [agendaItems, setAgendaItems] = React.useState(0);
-  const [chosenToSetDurationAndAgendaItems, setChosenToSetDurationAndAgendaItems] = React.useState(false); // change name to be more descriptive
+  const [chosenToAddDurationAndAgendaItems, setChosenToAddDurationAndAgendaItems] = React.useState(false);
 
   const chooseToSetDurationAndAgendaItems = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChosenToSetDurationAndAgendaItems(event.target.checked);
+    setChosenToAddDurationAndAgendaItems(event.target.checked);
   };
 
   const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -113,26 +113,13 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
     setRoomName(event.target.value);
   };
 
-  const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log('Chosen Duration', event.target.value);
-    setDuration(parseInt(event.target.value));
+  const handleDurationChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    setDuration(event.target.value as number);
   };
 
-  const addAgendaItem = () => {
-    // this can be an array instead?
-    // 
-    console.log('AgendaItems:', agendaItems + 1);
-    setAgendaItems(agendaItems + 1);
-  };
+  const addAgendaItem = () => setAgendaItems(agendaItems + 1);
 
-  const removeAgendaItem = () => {
-    // this can be an array instead?
-    // 
-    console.log('AgendaItems:', agendaItems - 1);
-    // this removes the last agenda item
-    // it needs to remove the specifically clicked agenda item
-    setAgendaItems(agendaItems - 1);
-  };
+  const removeAgendaItem = () => setAgendaItems(agendaItems - 1);
 
   const generate = (element: React.ReactElement) => {
     const agendaArray = [...Array(agendaItems).keys()];
@@ -192,31 +179,35 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
         <div className={classes.durationCheckboxAndSelectContainer}>
           <FormControlLabel
             className={classes.formControlLabel}
-            control={<Checkbox checked={chosenToSetDurationAndAgendaItems} onChange={chooseToSetDurationAndAgendaItems} name="checkedA" />}
+            control={<Checkbox checked={chosenToAddDurationAndAgendaItems} onChange={chooseToSetDurationAndAgendaItems} name="checkedA" />}
             label="Set Duration?"
             labelPlacement="start"
           />
 
-          {chosenToSetDurationAndAgendaItems ? (
+          {chosenToAddDurationAndAgendaItems ? (
             <div className={classes.durationTextFieldContainer}>
-              <InputLabel shrink htmlFor="input-room-name">
-                Duration
-              </InputLabel>
-              <TextField
-                autoCapitalize="false"
-                id="input--duration"
-                variant="outlined"
-                fullWidth
-                size="small"
-                // value={roomName}
-                // onChange={handleRoomNameChange}
-              />
+              <FormControl className={classes.formControl}>
+                <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={duration}
+                  onChange={handleDurationChange}
+                >
+                  <MenuItem value={5}>5</MenuItem>
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={15}>15</MenuItem>
+                  <MenuItem value={20}>20</MenuItem>
+                  <MenuItem value={25}>25</MenuItem>
+                  <MenuItem value={30}>30</MenuItem>
+                </Select>
+              </FormControl>
             </div>
           ) : null}
         </div>
 
-        {chosenToSetDurationAndAgendaItems ? (
-          <div>
+        {chosenToAddDurationAndAgendaItems ? (
+          <>
             <div className={classes.agendaItemForm}>
               <Typography variant="body1">Press the + Button to Add Agenda Points</Typography>
               <IconButton 
@@ -228,52 +219,51 @@ export default function RoomNameScreen({ name, roomName, setName, setRoomName, h
                 <AddCircleIcon />
               </IconButton>
             </div>
-            <div className={classes.agendaItemListContainer}>
-              <List className={classes.agendaItemList}>
-                {generate(
-                  <ListItem>
-                    <div className={classes.agendaItemInputContainer}>
-                      <div className={classes.textFieldContainer}>
-                        <InputLabel shrink htmlFor="input-room-name">
-                          Description
-                        </InputLabel>
-                        <TextField
-                          autoCapitalize="false"
-                          id="input-agenda-item-description"
-                          variant="outlined"
-                          fullWidth
-                          size="small"
-                          // value={roomName}
-                          // onChange={handleRoomNameChange}
-                        />
-                      </div>
 
-                      <div className={classes.textFieldContainer}>
-                        <InputLabel shrink htmlFor="input-room-name">
-                          Duration
-                        </InputLabel>
-                        <TextField
-                          autoCapitalize="false"
-                          id="input-agenda-item-duration"
-                          variant="outlined"
-                          fullWidth
-                          size="small"
-                          // value={roomName}
-                          // onChange={handleRoomNameChange}
-                        />
-                      </div>
+            <List>
+              {generate(
+                <ListItem>
+                  <div className={classes.agendaItemInputContainer}>
+                    <div className={classes.textFieldContainer}>
+                      <InputLabel shrink htmlFor="input-room-name">
+                        Description
+                      </InputLabel>
+                      <TextField
+                        autoCapitalize="false"
+                        id="input-agenda-item-description"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        // value={roomName}
+                        // onChange={handleRoomNameChange}
+                      />
                     </div>
 
-                    <ListItemSecondaryAction>
-                      <IconButton className={classes.agendaItemDeleteIcon} edge="end" aria-label="delete" onClick={removeAgendaItem}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>,
-                )}
-              </List>
-            </div>
-          </div>
+                    <div className={classes.textFieldContainer}>
+                      <InputLabel shrink htmlFor="input-room-name">
+                        Duration
+                      </InputLabel>
+                      <TextField
+                        autoCapitalize="false"
+                        id="input-agenda-item-duration"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        // value={roomName}
+                        // onChange={handleRoomNameChange}
+                      />
+                    </div>
+                  </div>
+
+                  <ListItemSecondaryAction>
+                    <IconButton className={classes.agendaItemDeleteIcon} edge="end" aria-label="delete" onClick={removeAgendaItem}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>,
+              )}
+            </List>
+          </>
         ) : null}
 
         <Button
