@@ -28,10 +28,12 @@ app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 // 
 app.use('/saveMeetingAgendaDetails', (req, res) => {
   res.send('samir is saving meeting agenda details');
+  // store in a local JSON
 })
 
 app.use('/fetchMeetingAgendaDetails', (req, res) => {
   res.send('samir is fetching meeting agenda details');
+  // look up within local JSON by indexing keys with roomName
 })
 // 
 
