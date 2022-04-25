@@ -27,7 +27,8 @@ app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 
 // 
 app.use('/saveMeetingAgendaDetails', (req, res) => {
-  res.send('samir is saving meeting agenda details');
+  console.log('req.body', req.body);
+  res.send({ test: 'test' });
   // store in a local JSON
 })
 

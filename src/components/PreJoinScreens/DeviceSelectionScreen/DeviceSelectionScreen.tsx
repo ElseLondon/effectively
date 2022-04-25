@@ -65,9 +65,8 @@ interface DeviceSelectionScreenProps {
 export default function DeviceSelectionScreen({ 
   name,
   roomName,
-  // duration,
-  // durationCheckboxChecked,
-  // agendaItems,
+  duration,
+  agendaItems,
   setStep
 }: DeviceSelectionScreenProps) {
 
@@ -77,21 +76,29 @@ export default function DeviceSelectionScreen({
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
-  const handleJoin = () => {
-    // //
-    // console.log('--------------------DEVICE_SELECTION_SCREEN.TSX----------------------------');
-    // console.log('name', name);
-    // console.log('roomName', roomName);
-    // console.log('durationCheckboxChecked', durationCheckboxChecked);
-    // console.log('duration', duration);
-    // console.log('agendaItems', agendaItems);
-    // //
+  const handleJoin = async () => {
+    const endpoint = '/saveMeetingAgendaDetails'
+    const storeMeetingAgendaDetails = duration > 0;
+
+    if (storeMeetingAgendaDetails) {
+      const result = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          duration,
+          agendaItems
+        }),
+      }).then(res => res.json());
+
+      console.log('storeMeetingAgendaDetails', storeMeetingAgendaDetails);
+      console.log('result', result);
+    };
+
     getToken(
       name,
       roomName,
-      // durationCheckboxChecked,
-      // duration,
-      // agendaItems
     ).then(({ token }) => {
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
