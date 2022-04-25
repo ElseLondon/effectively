@@ -146,34 +146,36 @@ export default function RoomNameScreen({
     const agendaItemsWithUpdatedDescription = [...agendaItems];
     agendaItemsWithUpdatedDescription[agendaItemIndex].description = event.target.value;
     setAgendaItems(agendaItemsWithUpdatedDescription);
-    console.log('!*!', agendaItemsWithUpdatedDescription); //
   };
 
   const handleAgendaItemDurationChange = (agendaItemIndex: number) => (event: ChangeEvent<HTMLInputElement>) => {
     const agendaItemsWithUpdatedDuration = [...agendaItems];
     agendaItemsWithUpdatedDuration[agendaItemIndex].duration = parseInt(event.target.value);
     setAgendaItems(agendaItemsWithUpdatedDuration);
-    console.log('!*!', agendaItemsWithUpdatedDuration); //
-  }
+  };
 
 
   const disableContinue = () => {
-    const checkboxCheckedAndDurationSelected = durationCheckboxChecked && (duration > 0);
-    // //
-    // Allow for checkbox not being checked
-    // 
-    //~Add Checks for All Present Agenda Item Fields~// 
-    // 
-    // const allAgendaItemDescriptionsComplete;           // agenda item descriptions entered
-    // const allAgendaItemDurationsComplete;              // agenda item durations entered
-    // const allAgendaItemDurationsEqualOverallDuration;  // agenda item durations come to same amount as overall duration
-    // //
-    return !name || !roomName || durationCheckboxChecked;
+    const allAgendaItemDescriptions = agendaItems.map((agendaItem) => agendaItem.description);
+    const allAgendaItemDescriptionsComplete = !allAgendaItemDescriptions.includes('');
 
-    // if (durationCheckboxChecked) return !name || !roomName
-    // else if (!durationCheckboxChecked)
-    // // check for !name, !roomName, and the rest listed above
-  }
+    const allAgendaItemDurations = agendaItems.map((agendaItem) => agendaItem.duration);
+    const allAgendaItemDurationsComplete = !allAgendaItemDurations.includes(0);
+
+    const totalAgendaItemDuration = allAgendaItemDurations.reduce((a, b) => a + b, 0);
+    const allAgendaItemDurationsEqualOverallDuration = totalAgendaItemDuration === duration;
+
+    if (!durationCheckboxChecked) return !name || !roomName;
+
+    return (
+      !name ||
+      !roomName ||
+      !(duration > 0) ||
+      !allAgendaItemDescriptionsComplete ||
+      !allAgendaItemDurationsComplete ||
+      !allAgendaItemDurationsEqualOverallDuration
+    );
+  };
 
   return (
     <>
