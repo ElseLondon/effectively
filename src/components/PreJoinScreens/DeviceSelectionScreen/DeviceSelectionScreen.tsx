@@ -77,23 +77,31 @@ export default function DeviceSelectionScreen({
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
   const handleJoin = async () => {
-    const endpoint = '/saveMeetingAgendaDetails'
     const saveMeetingAgendaDetails = duration > 0;
 
     if (saveMeetingAgendaDetails) {
-      const result = await fetch(endpoint, {
+      await fetch('/saveMeetingAgendaDetails', {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
         },
         body: JSON.stringify({
-          duration,
-          agendaItems
+          [roomName]: {
+            duration,
+            agendaItems
+          }
         }),
       }).then(res => res.json());
 
-      console.log('saveMeetingAgendaDetails', saveMeetingAgendaDetails);
-      console.log('result', result);
+    } else {
+      // const result = await fetch('/fetchMeetingAgendaDetails', {
+      //   method: 'GET',
+      //   headers: {
+      //     'content-type': 'application/json',
+      //   },
+      // }).then(res => res.json());
+
+      // find a way to pass on meeting details to Video Component
     };
 
     getToken(

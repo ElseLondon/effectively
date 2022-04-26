@@ -25,18 +25,29 @@ const authMiddleware =
 app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 
+// // //
+// //
+// 
+const meetingRoomAgendaDetails: any = {}; // fix any
 // 
 app.use('/saveMeetingAgendaDetails', (req, res) => {
-  console.log('req.body', req.body);
-  res.send({ test: 'test' });
-  // store in a local JSON
+  const roomName = Object.keys(req.body)[0];
+  meetingRoomAgendaDetails[roomName] = req.body[roomName];
+
+  // console.log('req.body', req.body);
+  // console.log('req.body - roomName', roomName);
+  // console.log('meetingRoomAgendaDetails', meetingRoomAgendaDetails);
+
+  res.status(200).send(meetingRoomAgendaDetails);
 })
 
 app.use('/fetchMeetingAgendaDetails', (req, res) => {
-  res.send('samir is fetching meeting agenda details');
+  res.status(200).send(meetingRoomAgendaDetails);
   // look up within local JSON by indexing keys with roomName
 })
 // 
+// //
+// // //
 
 app.use((req, res, next) => {
   // Here we add Cache-Control headers in accordance with the create-react-app best practices.

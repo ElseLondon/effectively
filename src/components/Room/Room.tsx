@@ -31,7 +31,24 @@ const useStyles = makeStyles((theme: Theme) => {
 export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { isBackgroundSelectionOpen } = useVideoContext();
+  const { room, isBackgroundSelectionOpen } = useVideoContext();
+
+  const [data, setData] = React.useState({});
+
+  React.useEffect(() => {
+    fetch('/fetchMeetingAgendaDetails', {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json',
+      },
+    }).then(res => res.json())
+      .then((res) => {
+        // console.log('our room data', res[room!.name]);
+        const meetingRoomDetails = res[room!.name];
+        setData(meetingRoomDetails);
+      });
+  })
+
   return (
     <div
       className={clsx(classes.container, {
