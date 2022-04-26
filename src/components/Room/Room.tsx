@@ -8,6 +8,8 @@ import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSe
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -28,10 +30,24 @@ const useStyles = makeStyles((theme: Theme) => {
     rightDrawerOpen: { gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px` },
     root: {
       width: '121%',
+      height: '18px',
       zIndex: 999
     },
+    progressBar: {
+      height: '18px'
+    },
+    snackbarRoot: {
+      width: '100%',
+      '& > * + *': {
+        marginTop: theme.spacing(2),
+      },
+    }
   };
 });
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function Room() {
   const classes = useStyles();
@@ -41,6 +57,7 @@ export default function Room() {
   const [data, setData] = React.useState({});
   const [timerClock, setTimerClock] = React.useState(300);
   const [progress, setProgress] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     fetch('/fetchMeetingAgendaDetails', {
@@ -56,27 +73,6 @@ export default function Room() {
       });
   }, []);
 
-  // React.useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setProgress((oldProgress) => {
-  //       if (oldProgress === 100) {
-  //         return 0;
-  //       }
-  //       const diff = 1 * 10;
-  //       return Math.min(oldProgress + diff, 100);
-  //     });
-  //   }, 500);
-
-  //   return () => {
-  //     clearInterval(timer);
-  //   };
-  // }, []);
-
-  // const MIN = 0   // MIN = Minimum expected value
-  // const MAX = 300 // MAX = Maximium expected value
-  // // Function to normalise the values (MIN / MAX could be integrated)
-  // const normalise = (value: number) => (value - MIN) * 100 / (MAX - MIN);
-
   React.useEffect(() => {
     const timer = setTimeout(function() {
       const timeElapsed = 300 - timerClock;
@@ -85,14 +81,24 @@ export default function Room() {
       console.log("minus: ",       timerClock);
       console.log('timeElapsed: ', timeElapsed);
       console.log('currentProgress: ', currentProgress);
+      if (timeElapsed === 100) { setOpen(true) };
+      if (timeElapsed === 200) { setOpen(true) };
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
     }, 1000)
 
-    return () => { // this should work flawlessly besides some milliseconds lost here and there 
-       clearTimeout(timer)
+    return () => {
+      clearTimeout(timer)
     }
-   }, [timerClock]);
+  }, [timerClock]);
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   return (
     <div
@@ -101,8 +107,17 @@ export default function Room() {
       })}
     >
       <div className={classes.root}>
-        <LinearProgress variant="determinate" value={progress} color="secondary" />
+        <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} />
       </div>
+
+      <div className={classes.snackbarRoot} >
+        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="info">
+            Please move onto next topic!
+          </Alert>
+        </Snackbar>
+      </div>
+
       <MainParticipant />
       <ParticipantList />
       <ChatWindow />
