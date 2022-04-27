@@ -81,8 +81,9 @@ export default function Room() {
       console.log("minus: ",       timerClock);
       console.log('timeElapsed: ', timeElapsed);
       console.log('currentProgress: ', currentProgress);
-      if (timeElapsed === 100) { setOpen(true) };
-      if (timeElapsed === 200) { setOpen(true) };
+      if (timeElapsed === 10) { setOpen(true) };
+      if (timeElapsed === 20) { setOpen(true) };
+      if (timeElapsed === 30) { setOpen(true) };
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
     }, 1000)
