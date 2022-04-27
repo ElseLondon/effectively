@@ -69,6 +69,31 @@ export default function MenuBar() {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
 
+  // 
+  const hoursMinSecs = {hours:0, minutes: 5, seconds: 0}
+  const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
+  const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
+
+  const reset = () => setTime([hours, minutes, seconds]);
+
+  const tick = () => {
+    if (hrs === 0 && mins === 0 && secs === 0) 
+        reset()
+    else if (mins === 0 && secs === 0) {
+        setTime([hrs - 1, 59, 59]);
+    } else if (secs === 0) {
+        setTime([hrs, mins - 1, 59]);
+    } else {
+        setTime([hrs, mins, secs - 1]);
+    }
+  };
+
+  React.useEffect(() => {
+    const timerId = setInterval(() => tick(), 1000);
+    return () => clearInterval(timerId);
+  });
+  // 
+
   return (
     <>
       {isSharingScreen && (
@@ -82,6 +107,13 @@ export default function MenuBar() {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Typography variant="body1">{room!.name}</Typography>
+              <div>
+                <p>
+                  {`${hrs.toString().padStart(2, '0')}:
+                  ${mins.toString().padStart(2, '0')}:
+                  ${secs.toString().padStart(2, '0')}`}
+                </p>
+            </div>
             </Grid>
           </Hidden>
           <Grid item>
