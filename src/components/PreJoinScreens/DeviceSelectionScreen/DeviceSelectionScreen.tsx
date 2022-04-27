@@ -57,7 +57,7 @@ interface DeviceSelectionScreenProps {
   name: string;
   roomName: string;
   duration: number;
-  // durationCheckboxChecked: boolean | undefined;
+  durationCheckboxChecked: boolean | undefined;
   agendaItems: AgendaItem[];
   setStep: (step: Steps) => void;
 }
