@@ -7,13 +7,21 @@ import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import { AgendaItem } from './RoomNameScreen/RoomNameScreen';
+import { RoomAgenda } from '../../App';
 
 export enum Steps {
   roomNameStep,
   deviceSelectionStep,
 }
 
-export default function PreJoinScreens() {
+interface PreJoinScreensProps {
+  setRoomAgendaInAppState: (roomAgenda: RoomAgenda) => void;
+}
+
+export default function PreJoinScreens({
+  setRoomAgendaInAppState
+}: PreJoinScreensProps) {
+  
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
   // @ts-ignore
@@ -83,6 +91,7 @@ export default function PreJoinScreens() {
           durationCheckboxChecked={durationCheckboxChecked}
           agendaItems={agendaItems}
           setStep={setStep}
+          setRoomAgendaInAppState={setRoomAgendaInAppState}
         />
       )}
     </IntroContainer>

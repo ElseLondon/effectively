@@ -43,20 +43,20 @@ export default function App() {
   const height = useHeight();
 
   // 
-  const [roomAgenda, setRoomAgenda] = useState<RoomAgenda>({roomName: '', duration: 0, agendaItems: []});
+  const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({roomName: '', duration: 0, agendaItems: []});
   // 
 
   return (
     <Container style={{ height }}>
       {roomState === 'disconnected' ? (
-        <PreJoinScreens />
+        <PreJoinScreens setRoomAgendaInAppState={setRoomAgendaInAppState}/>
       ) : (
         <Main>
           <ReconnectingNotification />
           <RecordingNotifications />
           <MobileTopMenuBar />
-          <Room />
-          <MenuBar />
+          <Room    /*roomAgendaInAppState={roomAgendaInAppState}*//>
+          <MenuBar /*roomAgendaInAppState={roomAgendaInAppState}*//>
         </Main>
       )}
     </Container>

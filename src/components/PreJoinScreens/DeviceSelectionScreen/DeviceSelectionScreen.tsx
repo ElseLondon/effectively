@@ -10,6 +10,7 @@ import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { AgendaItem } from '../RoomNameScreen/RoomNameScreen';
+import { RoomAgenda } from '../../../App';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -60,6 +61,7 @@ interface DeviceSelectionScreenProps {
   durationCheckboxChecked: boolean | undefined;
   agendaItems: AgendaItem[];
   setStep: (step: Steps) => void;
+  setRoomAgendaInAppState: (roomAgenda: RoomAgenda) => void;
 }
 
 export default function DeviceSelectionScreen({ 
@@ -68,7 +70,8 @@ export default function DeviceSelectionScreen({
   duration,
   durationCheckboxChecked,
   agendaItems,
-  setStep
+  setStep,
+  setRoomAgendaInAppState
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
@@ -83,8 +86,22 @@ export default function DeviceSelectionScreen({
     if (saveMeetingAgenda) {
       await setRoomAgenda(roomName, duration, agendaItems);
       // and then store the Agenda in appState/Context for Global Access
+      setRoomAgendaInAppState({
+        roomName,
+        duration,
+        agendaItems
+      });
     };
-
+    // } else {
+    //   const roomAgenda = await getRoomAgenda(roomName);
+    //   const { roomName, duration, agendaItems } = roomAgenda;
+    //   setRoomAgendaInAppState({
+    //     roomName,
+    //     duration,
+    //     agendaItems
+    //   });
+    // };
+    // else clause?
     // if we're not savingMeetingAgenda, we here need to look them up 
     // and then store the Agenda in appState/Context for Global Access
 
