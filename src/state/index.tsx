@@ -23,9 +23,7 @@ export interface StateContextType {
   dispatchSetting: React.Dispatch<SettingsAction>;
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
-  // 
-  setRoomAgendaDetails(room: string, duration: number, agendaItems: AgendaItem[]): void; /* Promise<void>; */
-  //
+  setRoomAgendaDetails(room: string, duration: number, agendaItems: AgendaItem[]): Promise<void>;
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -85,30 +83,29 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           }),
         }).then(res => res.json());
       },
-      //
-      setRoomAgendaDetails: /* async */ (
+      setRoomAgendaDetails: async (
         room_name: string,
         room_duration: number,
         agenda_items: AgendaItem[]
       ) => {
-        console.log('setRoomAgendaDetails|InnerFunction|');
-        console.log('room_name:', room_name);
-        console.log('room_duration:', room_duration);
-        console.log('agenda_items:', agenda_items);
-        // return fetch('/saveMeetingAgendaDetails', {
-        //   method: 'POST',
-        //   headers: {
-        //     'content-type': 'application/json',
-        //   },
-        //   body: JSON.stringify({
-        //     [roomName]: {
-        //       duration,
-        //       agendaItems
-        //     }
-        //   }),
-        // }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
+        // console.log('setRoomAgendaDetails|InnerFunction|');
+        // console.log('room_name:', room_name);
+        // console.log('room_duration:', room_duration);
+        // console.log('agenda_items:', agenda_items);
+
+        return fetch('/setRoomAgendaDetails', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            [room_name]: {
+              room_duration,
+              agenda_items
+            }
+          }),
+        }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
       },
-      //
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 
@@ -168,23 +165,19 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
-  //
   const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = (room, duration, agendaItems) => {
-    contextValue.setRoomAgendaDetails(room, duration, agendaItems);
-    // setIsFetching(true);
-    // return contextValue
-    //   .setRoomAgendaDetails(duration, agendaItems)
-    //   .then(res => {
-    //     setIsFetching(false);
-    //     return res;
-    //   })
-    //   .catch(err => {
-    //     setError(err);
-    //     setIsFetching(false);
-    //     return Promise.reject(err);
-    //   });
+    return contextValue
+      .setRoomAgendaDetails(room, duration, agendaItems)
+      .then(res => {
+        setIsFetching(false);
+        return res;
+      })
+      .catch(err => {
+        setError(err);
+        setIsFetching(false);
+        return Promise.reject(err);
+      });
   };
-  //
 
   return (
     <StateContext.Provider value={{ ...contextValue, getToken, setRoomAgendaDetails, updateRecordingRules }}>
