@@ -88,11 +88,6 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
         room_duration: number,
         agenda_items: AgendaItem[]
       ) => {
-        // console.log('setRoomAgenda|InnerFunction|');
-        // console.log('room_name:', room_name);
-        // console.log('room_duration:', room_duration);
-        // console.log('agenda_items:', agenda_items);
-
         return fetch('/setRoomAgenda', {
           method: 'POST',
           headers: {

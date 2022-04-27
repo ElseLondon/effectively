@@ -80,9 +80,7 @@ export default function DeviceSelectionScreen({
   const handleJoin = async () => {
     const saveMeetingAgendaDetails = durationCheckboxChecked && duration > 0;
 
-    if (saveMeetingAgendaDetails) {
-      setRoomAgenda(roomName, duration, agendaItems)
-    };
+    if (saveMeetingAgendaDetails) setRoomAgenda(roomName, duration, agendaItems);
 
     getToken(
       name,
