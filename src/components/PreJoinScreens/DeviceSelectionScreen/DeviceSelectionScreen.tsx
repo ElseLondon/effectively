@@ -81,7 +81,7 @@ export default function DeviceSelectionScreen({
     const saveMeetingAgendaDetails = durationCheckboxChecked && duration > 0;
 
     if (saveMeetingAgendaDetails) {
-      setRoomAgendaDetails(duration, agendaItems)
+      setRoomAgendaDetails(roomName, duration, agendaItems)
     };
 
     getToken(

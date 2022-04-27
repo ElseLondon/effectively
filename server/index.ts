@@ -25,12 +25,10 @@ const authMiddleware =
 app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 
-// // //
-// //
 // 
-const meetingRoomAgendaDetails: any = {}; // fix any
+const meetingRoomAgendaDetails: any = {}; // fix any | this could end up as needing a database? for now it works but super clumsy
 // 
-app.use('/saveMeetingAgendaDetails', (req, res) => {
+app.use('/setRoomAgendaDetails', (req, res) => {
   const roomName = Object.keys(req.body)[0];
   meetingRoomAgendaDetails[roomName] = req.body[roomName];
 
@@ -46,8 +44,6 @@ app.use('/fetchMeetingAgendaDetails', (req, res) => {
   // look up within local JSON by indexing keys with roomName
 })
 // 
-// //
-// // //
 
 app.use((req, res, next) => {
   // Here we add Cache-Control headers in accordance with the create-react-app best practices.

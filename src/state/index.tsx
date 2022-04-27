@@ -24,7 +24,7 @@ export interface StateContextType {
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
   // 
-  setRoomAgendaDetails(duration: number, agendaItems: AgendaItem[]): void; /* Promise<void>; */
+  setRoomAgendaDetails(room: string, duration: number, agendaItems: AgendaItem[]): void; /* Promise<void>; */
   //
 }
 
@@ -87,13 +87,15 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       },
       //
       setRoomAgendaDetails: /* async */ (
+        room_name: string,
         room_duration: number,
         agenda_items: AgendaItem[]
       ) => {
         console.log('setRoomAgendaDetails|InnerFunction|');
+        console.log('room_name:', room_name);
         console.log('room_duration:', room_duration);
         console.log('agenda_items:', agenda_items);
-        // await fetch('/saveMeetingAgendaDetails', {
+        // return fetch('/saveMeetingAgendaDetails', {
         //   method: 'POST',
         //   headers: {
         //     'content-type': 'application/json',
@@ -167,8 +169,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   };
 
   //
-  const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = (duration, agendaItems) => {
-    contextValue.setRoomAgendaDetails(duration, agendaItems);
+  const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = (room, duration, agendaItems) => {
+    contextValue.setRoomAgendaDetails(room, duration, agendaItems);
     // setIsFetching(true);
     // return contextValue
     //   .setRoomAgendaDetails(duration, agendaItems)
