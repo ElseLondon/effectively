@@ -11,11 +11,7 @@ import { AgendaItem } from '../components/PreJoinScreens/RoomNameScreen/RoomName
 export interface StateContextType {
   error: TwilioError | Error | null;
   setError(error: TwilioError | Error | null): void;
-  getToken(
-    name: string,
-    room: string,
-    passcode?: string,
-  ): Promise<{ room_type: RoomType; token: string }>;
+  getToken(name: string, room: string, passcode?: string): Promise<{ room_type: RoomType; token: string }>;
   user?: User | null | { displayName: undefined; photoURL: undefined; passcode?: string };
   signIn?(passcode?: string): Promise<void>;
   signOut?(): Promise<void>;
@@ -28,10 +24,7 @@ export interface StateContextType {
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
   // 
-  setRoomAgendaDetails(
-    duration: number,
-    agendaItems: AgendaItem[],
-  ): void; /* Promise<void>; */
+  setRoomAgendaDetails(duration: number, agendaItems: AgendaItem[]): void; /* Promise<void>; */
   //
 }
 
@@ -77,10 +70,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   } else {
     contextValue = {
       ...contextValue,
-      getToken: async (
-        user_identity: string,
-        room_name: string,
-      ) => {
+      getToken: async (user_identity: string, room_name: string) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
 
         return fetch(endpoint, {
@@ -178,10 +168,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
 
   //
   const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = (duration, agendaItems) => {
-    console.log('setRoomAgendaDetails|Wrapper|');
-    console.log('duration:', duration);
-    console.log('agendaItems:', agendaItems);
-
+    contextValue.setRoomAgendaDetails(duration, agendaItems);
     // setIsFetching(true);
     // return contextValue
     //   .setRoomAgendaDetails(duration, agendaItems)
