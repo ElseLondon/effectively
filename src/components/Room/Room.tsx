@@ -32,7 +32,6 @@ export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { isBackgroundSelectionOpen } = useVideoContext();
-
   return (
     <div
       className={clsx(classes.container, {
