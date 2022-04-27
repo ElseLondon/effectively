@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
@@ -7,6 +7,7 @@ import PreJoinScreens from './components/PreJoinScreens/PreJoinScreens';
 import ReconnectingNotification from './components/ReconnectingNotification/ReconnectingNotification';
 import RecordingNotifications from './components/RecordingNotifications/RecordingNotifications';
 import Room from './components/Room/Room';
+import { AgendaItem } from './components/PreJoinScreens/RoomNameScreen/RoomNameScreen';
 
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
@@ -25,6 +26,12 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
   },
 }));
 
+export interface RoomAgenda {
+  roomName: string;
+  duration: number;
+  agendaItems: AgendaItem[];
+};
+
 export default function App() {
   const roomState = useRoomState();
 
@@ -34,6 +41,10 @@ export default function App() {
   // We will dynamically set the height with 'window.innerHeight', which means that this
   // will look good on mobile browsers even after the location bar opens or closes.
   const height = useHeight();
+
+  // 
+  const [roomAgenda, setRoomAgenda] = useState<RoomAgenda>({roomName: '', duration: 0, agendaItems: []});
+  // 
 
   return (
     <Container style={{ height }}>

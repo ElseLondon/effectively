@@ -26,15 +26,15 @@ app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 
 // 
-const meetingRoomAgendaDetails: any = {}; // fix any | this could end up as needing a database? for now it works but super clumsy
+const meetingRoomAgendaDetails: any = {}; // fix any | this could end up as needing a database? for now it works but in deployment?
 
 app.use('/setRoomAgenda', (req, res) => {
   const roomName = Object.keys(req.body)[0];
   meetingRoomAgendaDetails[roomName] = req.body[roomName];
 
-  console.log('req.body', req.body);
-  console.log('req.body - roomName', roomName);
-  console.log('meetingRoomAgendaDetails', meetingRoomAgendaDetails);
+  console.log('req.body',                 JSON.stringify(req.body));
+  console.log('req.body - roomName',      roomName);
+  console.log('meetingRoomAgendaDetails', JSON.stringify(meetingRoomAgendaDetails));
 
   res.status(200).send(meetingRoomAgendaDetails); // do we need to send these back for now?
 })
