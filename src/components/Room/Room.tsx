@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React /*, { useState }*/ from 'react';
 import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core';
 import ChatWindow from '../ChatWindow/ChatWindow';
@@ -7,7 +7,7 @@ import MainParticipant from '../MainParticipant/MainParticipant';
 import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSelectionDialog';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { useAppState } from '../../state';
+// import { useAppState } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -32,27 +32,27 @@ const useStyles = makeStyles((theme: Theme) => {
 export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { room, isBackgroundSelectionOpen } = useVideoContext();
+  const { /* room, */ isBackgroundSelectionOpen } = useVideoContext();
   // 
-  const { getRoomAgenda } = useAppState();
-  const [data, setData] = useState({});
+  // const { getRoomAgenda } = useAppState();
+  // const [data, setData] = useState({});
   // 
 
   // // // 
-  React.useEffect(() => {
-    // fetch('/getRoomAgenda', {
-    //   method: 'GET',
-    //   headers: {
-    //     'content-type': 'application/json',
-    //   },
-    // }).then(res => res.json())
-    //   .then((res) => {
-    //     console.log('our room data', res[room!.name]);
-    //     const meetingRoomDetails = res[room!.name];
-    //     setData(meetingRoomDetails);
-    //   });
-    getRoomAgenda(room!.name);
-  }, []);
+  // React.useEffect(() => {
+  //   fetch('/getRoomAgenda', {
+  //     method: 'GET',
+  //     headers: {
+  //       'content-type': 'application/json',
+  //     },
+  //   }).then(res => res.json())
+  //     .then((res) => {
+  //       console.log('our room data', res[room!.name]);
+  //       const meetingRoomDetails = res[room!.name];
+  //       setData(meetingRoomDetails);
+  //     });
+  //   getRoomAgenda(room!.name);
+  // }, []);
   // // // 
 
   return (
