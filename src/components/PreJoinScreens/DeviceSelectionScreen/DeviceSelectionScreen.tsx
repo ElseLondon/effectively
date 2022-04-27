@@ -66,6 +66,7 @@ export default function DeviceSelectionScreen({
   name,
   roomName,
   duration,
+  durationCheckboxChecked,
   agendaItems,
   setStep
 }: DeviceSelectionScreenProps) {
@@ -77,23 +78,10 @@ export default function DeviceSelectionScreen({
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
   const handleJoin = async () => {
-    const saveMeetingAgendaDetails = duration > 0;
+    const saveMeetingAgendaDetails = durationCheckboxChecked && duration > 0;
 
     if (saveMeetingAgendaDetails) {
-      setRoomAgendaDetails();
-
-      // await fetch('/saveMeetingAgendaDetails', {
-      //   method: 'POST',
-      //   headers: {
-      //     'content-type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     [roomName]: {
-      //       duration,
-      //       agendaItems
-      //     }
-      //   }),
-      // }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
+      setRoomAgendaDetails(duration, agendaItems)
     };
 
     getToken(

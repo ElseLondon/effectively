@@ -6,7 +6,7 @@ import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { User } from 'firebase';
-// import { AgendaItem } from '../components/PreJoinScreens/RoomNameScreen/RoomNameScreen';
+import { AgendaItem } from '../components/PreJoinScreens/RoomNameScreen/RoomNameScreen';
 
 export interface StateContextType {
   error: TwilioError | Error | null;
@@ -27,14 +27,12 @@ export interface StateContextType {
   dispatchSetting: React.Dispatch<SettingsAction>;
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
-  // //
   // 
-  // durationCheckboxChecked?: boolean | undefined,
-  // duration?: number,
-  // agendaItems?: AgendaItem[],
-  setRoomAgendaDetails(): void; /* Promise<void>; */
-  // 
-  // //
+  setRoomAgendaDetails(
+    duration: number,
+    agendaItems: AgendaItem[],
+  ): void; /* Promise<void>; */
+  //
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -97,15 +95,28 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           }),
         }).then(res => res.json());
       },
-      // // //
-      // // 
       //
-      setRoomAgendaDetails: /* async */ () => {
-        console.log('setRoomAgendaDetails1');
+      setRoomAgendaDetails: /* async */ (
+        room_duration: number,
+        agenda_items: AgendaItem[]
+      ) => {
+        console.log('setRoomAgendaDetails|InnerFunction|');
+        console.log('room_duration:', room_duration);
+        console.log('agenda_items:', agenda_items);
+        // await fetch('/saveMeetingAgendaDetails', {
+        //   method: 'POST',
+        //   headers: {
+        //     'content-type': 'application/json',
+        //   },
+        //   body: JSON.stringify({
+        //     [roomName]: {
+        //       duration,
+        //       agendaItems
+        //     }
+        //   }),
+        // }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
       },
       //
-      // //
-      // // //
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 
@@ -165,16 +176,26 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
-  // // // 
-  // //
   //
-  const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = () => {
-    console.log('setRoomAgendaDetails2');
-    // setRoomAgendaDetails();
+  const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = (duration, agendaItems) => {
+    console.log('setRoomAgendaDetails|Wrapper|');
+    console.log('duration:', duration);
+    console.log('agendaItems:', agendaItems);
+
+    // setIsFetching(true);
+    // return contextValue
+    //   .setRoomAgendaDetails(duration, agendaItems)
+    //   .then(res => {
+    //     setIsFetching(false);
+    //     return res;
+    //   })
+    //   .catch(err => {
+    //     setError(err);
+    //     setIsFetching(false);
+    //     return Promise.reject(err);
+    //   });
   };
   //
-  // //
-  // // // 
 
   return (
     <StateContext.Provider value={{ ...contextValue, getToken, setRoomAgendaDetails, updateRecordingRules }}>
