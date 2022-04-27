@@ -78,9 +78,15 @@ export default function DeviceSelectionScreen({
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
   const handleJoin = async () => {
-    const saveMeetingAgendaDetails = durationCheckboxChecked && duration > 0;
+    const saveMeetingAgenda = durationCheckboxChecked && duration > 0;
 
-    if (saveMeetingAgendaDetails) setRoomAgenda(roomName, duration, agendaItems);
+    if (saveMeetingAgenda) {
+      await setRoomAgenda(roomName, duration, agendaItems);
+      // and then store the Agenda in appState/Context for Global Access
+    };
+
+    // if we're not savingMeetingAgenda, we here need to look them up 
+    // and then store the Agenda in appState/Context for Global Access
 
     getToken(
       name,
