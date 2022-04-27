@@ -14,9 +14,6 @@ export interface StateContextType {
   getToken(
     name: string,
     room: string,
-    // durationCheckboxChecked?: boolean | undefined,
-    // duration?: number,
-    // agendaItems?: AgendaItem[],
     passcode?: string,
   ): Promise<{ room_type: RoomType; token: string }>;
   user?: User | null | { displayName: undefined; photoURL: undefined; passcode?: string };
@@ -30,6 +27,14 @@ export interface StateContextType {
   dispatchSetting: React.Dispatch<SettingsAction>;
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
+  // //
+  // 
+  // durationCheckboxChecked?: boolean | undefined,
+  // duration?: number,
+  // agendaItems?: AgendaItem[],
+  setRoomAgendaDetails(): void; /* Promise<void>; */
+  // 
+  // //
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -77,21 +82,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       getToken: async (
         user_identity: string,
         room_name: string,
-        // duration_checkbox_checked: boolean | undefined,
-        // duration: number,
-        // agenda_items: AgendaItem[]
       ) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
-
-        // //
-        // console.log('contextValue', contextValue);
-        // console.log('--------------------INDEX.TSX----------------------------');
-        // console.log('user_identity', user_identity);
-        // console.log('room_name', room_name);
-        // console.log('duration_checkbox_checked', duration_checkbox_checked);
-        // console.log('duration', duration);
-        // console.log('agenda_items', agenda_items);
-        // //
 
         return fetch(endpoint, {
           method: 'POST',
@@ -101,14 +93,19 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           body: JSON.stringify({
             user_identity,
             room_name,
-            // duration_checkbox_checked,
-            // duration,
-            // agenda_items,
-            // 
             create_conversation: process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true',
           }),
         }).then(res => res.json());
       },
+      // // //
+      // // 
+      //
+      setRoomAgendaDetails: /* async */ () => {
+        console.log('setRoomAgendaDetails1');
+      },
+      //
+      // //
+      // // //
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 
@@ -168,8 +165,19 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
+  // // // 
+  // //
+  //
+  const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = () => {
+    console.log('setRoomAgendaDetails2');
+    // setRoomAgendaDetails();
+  };
+  //
+  // //
+  // // // 
+
   return (
-    <StateContext.Provider value={{ ...contextValue, getToken, updateRecordingRules }}>
+    <StateContext.Provider value={{ ...contextValue, getToken, setRoomAgendaDetails, updateRecordingRules }}>
       {props.children}
     </StateContext.Provider>
   );

@@ -57,7 +57,7 @@ interface DeviceSelectionScreenProps {
   name: string;
   roomName: string;
   duration: number;
-  durationCheckboxChecked: boolean | undefined;
+  // durationCheckboxChecked: boolean | undefined;
   agendaItems: AgendaItem[];
   setStep: (step: Steps) => void;
 }
@@ -71,7 +71,7 @@ export default function DeviceSelectionScreen({
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
-  const { getToken, isFetching } = useAppState();
+  const { getToken, setRoomAgendaDetails, isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
@@ -80,28 +80,20 @@ export default function DeviceSelectionScreen({
     const saveMeetingAgendaDetails = duration > 0;
 
     if (saveMeetingAgendaDetails) {
-      await fetch('/saveMeetingAgendaDetails', {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: JSON.stringify({
-          [roomName]: {
-            duration,
-            agendaItems
-          }
-        }),
-      }).then(res => res.json());
+      setRoomAgendaDetails();
 
-    } else {
-      // const result = await fetch('/fetchMeetingAgendaDetails', {
-      //   method: 'GET',
+      // await fetch('/saveMeetingAgendaDetails', {
+      //   method: 'POST',
       //   headers: {
       //     'content-type': 'application/json',
       //   },
-      // }).then(res => res.json());
-
-      // find a way to pass on meeting details to Video Component
+      //   body: JSON.stringify({
+      //     [roomName]: {
+      //       duration,
+      //       agendaItems
+      //     }
+      //   }),
+      // }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
     };
 
     getToken(
