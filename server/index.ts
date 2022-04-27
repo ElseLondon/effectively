@@ -28,7 +28,7 @@ app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 // 
 const meetingRoomAgendaDetails: any = {}; // fix any | this could end up as needing a database? for now it works but super clumsy
 
-app.use('/setRoomAgendaDetails', (req, res) => {
+app.use('/setRoomAgenda', (req, res) => {
   const roomName = Object.keys(req.body)[0];
   meetingRoomAgendaDetails[roomName] = req.body[roomName];
 

@@ -23,7 +23,7 @@ export interface StateContextType {
   dispatchSetting: React.Dispatch<SettingsAction>;
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
-  setRoomAgendaDetails(room: string, duration: number, agendaItems: AgendaItem[]): Promise<void>;
+  setRoomAgenda(room: string, duration: number, agendaItems: AgendaItem[]): Promise<void>;
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -83,17 +83,17 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           }),
         }).then(res => res.json());
       },
-      setRoomAgendaDetails: async (
+      setRoomAgenda: async (
         room_name: string,
         room_duration: number,
         agenda_items: AgendaItem[]
       ) => {
-        // console.log('setRoomAgendaDetails|InnerFunction|');
+        // console.log('setRoomAgenda|InnerFunction|');
         // console.log('room_name:', room_name);
         // console.log('room_duration:', room_duration);
         // console.log('agenda_items:', agenda_items);
 
-        return fetch('/setRoomAgendaDetails', {
+        return fetch('/setRoomAgenda', {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
@@ -165,9 +165,9 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
-  const setRoomAgendaDetails: StateContextType['setRoomAgendaDetails'] = (room, duration, agendaItems) => {
+  const setRoomAgenda: StateContextType['setRoomAgenda'] = (room, duration, agendaItems) => {
     return contextValue
-      .setRoomAgendaDetails(room, duration, agendaItems)
+      .setRoomAgenda(room, duration, agendaItems)
       .then(res => {
         setIsFetching(false);
         return res;
@@ -180,7 +180,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   };
 
   return (
-    <StateContext.Provider value={{ ...contextValue, getToken, setRoomAgendaDetails, updateRecordingRules }}>
+    <StateContext.Provider value={{ ...contextValue, getToken, setRoomAgenda, updateRecordingRules }}>
       {props.children}
     </StateContext.Provider>
   );

@@ -72,7 +72,7 @@ export default function DeviceSelectionScreen({
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
-  const { getToken, setRoomAgendaDetails, isFetching } = useAppState();
+  const { getToken, setRoomAgenda, isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
@@ -81,7 +81,7 @@ export default function DeviceSelectionScreen({
     const saveMeetingAgendaDetails = durationCheckboxChecked && duration > 0;
 
     if (saveMeetingAgendaDetails) {
-      setRoomAgendaDetails(roomName, duration, agendaItems)
+      setRoomAgenda(roomName, duration, agendaItems)
     };
 
     getToken(
