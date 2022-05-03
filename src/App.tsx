@@ -44,6 +44,7 @@ export default function App() {
 
   // 
   const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({roomName: '', duration: 0, agendaItems: []});
+  // pass through roomAgendaInAppState into <Room /> component and log out info on room join
   // 
 
   return (

@@ -95,15 +95,13 @@ export default function DeviceSelectionScreen({
     // } else {
     //   const roomAgenda = await getRoomAgenda(roomName);
     //   const { roomName, duration, agendaItems } = roomAgenda;
+    // 
     //   setRoomAgendaInAppState({
     //     roomName,
     //     duration,
     //     agendaItems
     //   });
     // };
-    // else clause?
-    // if we're not savingMeetingAgenda, we here need to look them up 
-    // and then store the Agenda in appState/Context for Global Access
 
     getToken(
       name,
