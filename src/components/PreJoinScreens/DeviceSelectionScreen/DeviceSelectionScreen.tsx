@@ -75,7 +75,7 @@ export default function DeviceSelectionScreen({
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
-  const { getToken, setRoomAgenda, isFetching } = useAppState();
+  const { getToken, setRoomAgenda, getRoomAgenda, isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
@@ -85,23 +85,29 @@ export default function DeviceSelectionScreen({
 
     if (saveMeetingAgenda) {
       await setRoomAgenda(roomName, duration, agendaItems);
-      // and then store the Agenda in appState/Context for Global Access
+
       setRoomAgendaInAppState({
         roomName,
         duration,
         agendaItems
       });
-    };
-    // } else {
-    //   const roomAgenda = await getRoomAgenda(roomName);
-    //   const { roomName, duration, agendaItems } = roomAgenda;
+    // };
+    // 
+    // //
+    // // //
+    } else {
+      const roomAgenda = await getRoomAgenda(roomName);
+      console.log('roomAgenda', roomAgenda);
     // 
     //   setRoomAgendaInAppState({
-    //     roomName,
-    //     duration,
-    //     agendaItems
+    //     roomAgenda.roomName,
+    //     roomAgenda.duration,
+    //     roomAgenda.agendaItems
     //   });
-    // };
+    };
+    // // //
+    // //
+    //
 
     getToken(
       name,

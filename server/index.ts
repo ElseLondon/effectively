@@ -39,10 +39,15 @@ app.use('/setRoomAgenda', (req, res) => {
   res.status(200).send(meetingRoomAgendaDetails); // do we need to send these back for now?
 })
 
+// 
+// //
+// // //
 app.use('/getRoomAgenda', (req, res) => {
   res.status(200).send(meetingRoomAgendaDetails);
   // look up within local JSON by indexing keys with roomName
 })
+// // //
+// //
 // 
 
 app.use((req, res, next) => {
