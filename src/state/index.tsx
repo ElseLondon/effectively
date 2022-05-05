@@ -24,9 +24,7 @@ export interface StateContextType {
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
   setRoomAgenda(room: string, duration: number, agendaItems: AgendaItem[]): Promise<void>;
-  // 
-  getRoomAgenda(room: string): void; // Promise<void>;
-  // 
+  getRoomAgenda(room: string): Promise<void>;
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -105,13 +103,15 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
         }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
       },
       // 
-      // //
-      // // //
       getRoomAgenda: async (room_name: string) => {
-        console.log('Inner fN|getRoomAgenda|room_name', room_name);
+        return fetch('/setRoomAgenda', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({ room_name }),
+        }).then(res => res.json());
       },
-      // // //
-      // //
       // 
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
@@ -186,16 +186,19 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
-  // 
-  // //
-  // // //
   const getRoomAgenda: StateContextType['getRoomAgenda'] = (room) => {
-    console.log('Outer fN|getRoomAgenda|room_name', room);
-    contextValue.getRoomAgenda(room);
+    return contextValue
+      .getRoomAgenda(room)
+      .then(res => {
+        setIsFetching(false);
+        return res;
+      })
+      .catch(err => {
+        setError(err);
+        setIsFetching(false);
+        return Promise.reject(err);
+      });
   };
-  // // //
-  // // 
-  // 
 
   return (
     <StateContext.Provider value={{ ...contextValue, getToken, setRoomAgenda, getRoomAgenda, updateRecordingRules }}>

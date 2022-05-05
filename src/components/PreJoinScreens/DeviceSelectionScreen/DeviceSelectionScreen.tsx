@@ -84,26 +84,30 @@ export default function DeviceSelectionScreen({
     const saveMeetingAgenda = durationCheckboxChecked && duration > 0;
 
     if (saveMeetingAgenda) {
-      await setRoomAgenda(roomName, duration, agendaItems);
+      const allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
+
+      console.log('saveMeetingAgenda', saveMeetingAgenda);
+      console.log('allRoomAgendas',    allRoomAgendas);
 
       setRoomAgendaInAppState({
         roomName,
         duration,
         agendaItems
       });
-    // };
     // 
     // //
     // // //
     } else {
-      const roomAgenda = await getRoomAgenda(roomName);
-      console.log('roomAgenda', roomAgenda);
-    // 
-    //   setRoomAgendaInAppState({
-    //     roomAgenda.roomName,
-    //     roomAgenda.duration,
-    //     roomAgenda.agendaItems
-    //   });
+      const allRoomAgendas = await getRoomAgenda(roomName);
+
+      console.log('saveMeetingAgenda', saveMeetingAgenda);
+      console.log('allRoomAgendas',    allRoomAgendas);
+      
+      // setRoomAgendaInAppState({
+      //   roomAgenda.roomName,
+      //   roomAgenda.duration,
+      //   roomAgenda.agendaItems
+      // });
     };
     // // //
     // //
