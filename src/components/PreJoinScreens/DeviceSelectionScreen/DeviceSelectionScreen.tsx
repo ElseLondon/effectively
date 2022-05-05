@@ -71,7 +71,7 @@ export default function DeviceSelectionScreen({
   durationCheckboxChecked,
   agendaItems,
   setStep,
-  setRoomAgendaInAppState
+  // setRoomAgendaInAppState
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
@@ -89,12 +89,12 @@ export default function DeviceSelectionScreen({
       console.log('saveMeetingAgenda', saveMeetingAgenda);
       console.log('allRoomAgendas',    allRoomAgendas);
 
-      setRoomAgendaInAppState({
-        roomName,
-        duration,
-        agendaItems
-      });
-      
+      // setRoomAgendaInAppState({
+      //   roomName,
+      //   duration,
+      //   agendaItems
+      // });
+
     } else {
       const allRoomAgendas = await getRoomAgenda(roomName);
 

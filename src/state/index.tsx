@@ -103,7 +103,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
         }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
       },
       getRoomAgenda: async (room_name: string) => {
-        return fetch('/setRoomAgenda', {
+        return fetch('/getRoomAgenda', {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
