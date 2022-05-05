@@ -3,8 +3,8 @@ import { useAppState } from '../../../state';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {
-  Button, Checkbox, IconButton, FormControl, FormControlLabel, InputLabel, List, ListItem, 
-  ListItemSecondaryAction, makeStyles, MenuItem, Select, TextField, Theme, Typography,
+  Button, Checkbox, IconButton, FormControlLabel, InputLabel, List, ListItem, 
+  ListItemSecondaryAction, makeStyles, MenuItem, TextField, Theme, Typography,
 } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -54,13 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 120,
-  }, 
-  selectEmpty: {
-    marginTop: theme.spacing(2),
   },
   formControlLabel: {
     margin: '0',
@@ -236,18 +229,13 @@ export default function RoomNameScreen({
 
           {durationCheckboxChecked ? (
             <div className={classes.durationTextFieldContainer}>
-              {/* <FormControl variant="outlined" className={classes.formControl}> */}
-                {/* <InputLabel id="demo-simple-select-label">Label</InputLabel> */}
               <InputLabel shrink htmlFor="input-room-name">
                 Duration
               </InputLabel>
                 <TextField
                 className={classes.durationTextField}
-                  // labelId="demo-simple-select-label"
-                  // id="demo-simple-select"
                   value={duration}
                   onChange={handleDurationChange}
-                  // label="Label"
                   variant="outlined"
                   select
                 >
@@ -258,7 +246,6 @@ export default function RoomNameScreen({
                   <MenuItem value={25}>25</MenuItem>
                   <MenuItem value={30}>30</MenuItem>
                 </TextField>
-              {/* </FormControl> */}
             </div>
           ) : null}
         </div>
