@@ -8,6 +8,13 @@ import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { User } from 'firebase';
 import { AgendaItem } from '../components/PreJoinScreens/RoomNameScreen/RoomNameScreen';
 
+export interface RoomAgenda {
+  [key:string]: { 
+    room_duration: number, 
+    agenda_items: AgendaItem[]
+  }
+}
+
 export interface StateContextType {
   error: TwilioError | Error | null;
   setError(error: TwilioError | Error | null): void;
@@ -23,8 +30,8 @@ export interface StateContextType {
   dispatchSetting: React.Dispatch<SettingsAction>;
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
-  setRoomAgenda(room: string, duration: number, agendaItems: AgendaItem[]): Promise<void>;
-  getRoomAgenda(room: string): Promise<void>;
+  setRoomAgenda(room: string, duration: number, agendaItems: AgendaItem[]): Promise<RoomAgenda>;
+  getRoomAgenda(room: string): Promise<RoomAgenda>;
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -100,7 +107,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
               agenda_items
             }
           }),
-        }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
+        }).then(res => res.json());
       },
       getRoomAgenda: async (room_name: string) => {
         return fetch('/getRoomAgenda', {

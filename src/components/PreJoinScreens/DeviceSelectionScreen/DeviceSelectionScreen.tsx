@@ -85,27 +85,25 @@ export default function DeviceSelectionScreen({
 
     if (saveMeetingAgenda) {
       const allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
-      // @ts-ignore
       const currentAgenda = allRoomAgendas[roomName];
 
-      console.log('saveMeetingAgenda', saveMeetingAgenda);
-      console.log('allRoomAgendas',    allRoomAgendas);
-      console.log('currentAgenda',     currentAgenda);
+      // console.log('saveMeetingAgenda', saveMeetingAgenda);
+      // console.log('allRoomAgendas',    allRoomAgendas);
+      // console.log('currentAgenda',     currentAgenda);
 
       setRoomAgendaInAppState({
         roomName,
-        duration,
-        agendaItems
+        duration: currentAgenda.room_duration,
+        agendaItems: currentAgenda.agenda_items
       });
 
     } else {
       const allRoomAgendas = await getRoomAgenda(roomName);
-      // @ts-ignore
       const currentAgenda = allRoomAgendas[roomName];
 
-      console.log('saveMeetingAgenda', saveMeetingAgenda);
-      console.log('allRoomAgendas',    allRoomAgendas);
-      console.log('currentAgenda',     currentAgenda);
+      // console.log('saveMeetingAgenda', saveMeetingAgenda);
+      // console.log('allRoomAgendas',    allRoomAgendas);
+      // console.log('currentAgenda',     currentAgenda);
 
       setRoomAgendaInAppState({
         roomName,
