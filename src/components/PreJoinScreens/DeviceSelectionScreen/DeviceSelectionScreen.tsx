@@ -82,35 +82,23 @@ export default function DeviceSelectionScreen({
 
   const handleJoin = async () => {
     const saveMeetingAgenda = durationCheckboxChecked && duration > 0;
+    let allRoomAgendas;
 
     if (saveMeetingAgenda) {
-      const allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
-      const currentAgenda = allRoomAgendas[roomName];
-
-      // console.log('saveMeetingAgenda', saveMeetingAgenda);
-      // console.log('allRoomAgendas',    allRoomAgendas);
-      // console.log('currentAgenda',     currentAgenda);
-
-      setRoomAgendaInAppState({
-        roomName,
-        duration: currentAgenda.room_duration,
-        agendaItems: currentAgenda.agenda_items
-      });
-
+      allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
     } else {
-      const allRoomAgendas = await getRoomAgenda(roomName);
-      const currentAgenda = allRoomAgendas[roomName];
-
-      // console.log('saveMeetingAgenda', saveMeetingAgenda);
-      // console.log('allRoomAgendas',    allRoomAgendas);
-      // console.log('currentAgenda',     currentAgenda);
-
-      setRoomAgendaInAppState({
-        roomName,
-        duration: currentAgenda.room_duration,
-        agendaItems: currentAgenda.agenda_items
-      });
+      allRoomAgendas = await getRoomAgenda(roomName);
     };
+
+    // leave this logging in for debugging // // // // 
+    console.log('allRoomAgendas', allRoomAgendas);  // 
+    // // // // // // // // // // // // // // // // // 
+
+    setRoomAgendaInAppState({
+      roomName,
+      duration: allRoomAgendas[roomName].room_duration,
+      agendaItems: allRoomAgendas[roomName].agenda_items
+    });
 
     getToken(
       name,

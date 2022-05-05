@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   inputContainer: {
     display: 'flex',
     justifyContent: 'space-between',
-    margin: '1.5em 0 3.5em',
+    margin: '1.5em 0 1.5em',
     '& div:not(:last-child)': {
       marginRight: '1em',
     },
@@ -37,11 +37,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   durationTextFieldContainer: {
-    width: '50%'
+    width: '50%',
+    marginLeft: '10px'
   },
   durationCheckboxAndSelectContainer: {
     marginBottom: "3em",
     display: 'flex'
+  },
+  durationTextField: {
+    minWidth: '88px'
   },
   continueButton: {
     position: 'absolute',
@@ -60,11 +64,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControlLabel: {
     margin: '0',
-    marginTop: '1em',
+    marginTop: '1.5em',
   },
   agendaItemForm: {
     display: 'flex',
     flexDirection: 'row',
+  },
+  agendaItemList: {
+    marginTop: '-30px'
   },
   addAgendaItemButton: {
     bottom: 12
@@ -229,13 +236,20 @@ export default function RoomNameScreen({
 
           {durationCheckboxChecked ? (
             <div className={classes.durationTextFieldContainer}>
-              <FormControl className={classes.formControl}>
-                <InputLabel id="demo-simple-select-label">Duration</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
+              {/* <FormControl variant="outlined" className={classes.formControl}> */}
+                {/* <InputLabel id="demo-simple-select-label">Label</InputLabel> */}
+              <InputLabel shrink htmlFor="input-room-name">
+                Duration
+              </InputLabel>
+                <TextField
+                className={classes.durationTextField}
+                  // labelId="demo-simple-select-label"
+                  // id="demo-simple-select"
                   value={duration}
                   onChange={handleDurationChange}
+                  // label="Label"
+                  variant="outlined"
+                  select
                 >
                   <MenuItem value={5}>5</MenuItem>
                   <MenuItem value={10}>10</MenuItem>
@@ -243,8 +257,8 @@ export default function RoomNameScreen({
                   <MenuItem value={20}>20</MenuItem>
                   <MenuItem value={25}>25</MenuItem>
                   <MenuItem value={30}>30</MenuItem>
-                </Select>
-              </FormControl>
+                </TextField>
+              {/* </FormControl> */}
             </div>
           ) : null}
         </div>
@@ -263,7 +277,7 @@ export default function RoomNameScreen({
               </IconButton>
             </div>
 
-            <List>
+            <List className={classes.agendaItemList}>
               {[...Array(agendaItems.length).keys()].map((agendaItemKey) => {
                 return (
                   <ListItem key={agendaItemKey}>
