@@ -71,7 +71,7 @@ export default function DeviceSelectionScreen({
   durationCheckboxChecked,
   agendaItems,
   setStep,
-  // setRoomAgendaInAppState
+  setRoomAgendaInAppState
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();

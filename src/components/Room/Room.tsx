@@ -32,28 +32,7 @@ const useStyles = makeStyles((theme: Theme) => {
 export default function Room() {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { /* room, */ isBackgroundSelectionOpen } = useVideoContext();
-  // 
-  // const { getRoomAgenda } = useAppState();
-  // const [data, setData] = useState({});
-  // 
-
-  // // // 
-  // React.useEffect(() => {
-  //   fetch('/getRoomAgenda', {
-  //     method: 'GET',
-  //     headers: {
-  //       'content-type': 'application/json',
-  //     },
-  //   }).then(res => res.json())
-  //     .then((res) => {
-  //       console.log('our room data', res[room!.name]);
-  //       const meetingRoomDetails = res[room!.name];
-  //       setData(meetingRoomDetails);
-  //     });
-  //   getRoomAgenda(room!.name);
-  // }, []);
-  // // // 
+  const { isBackgroundSelectionOpen } = useVideoContext();
 
   return (
     <div
