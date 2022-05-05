@@ -102,7 +102,6 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           }),
         }).then(res => res.json()); // does this need to be res.json? just log indication of success for now
       },
-      // 
       getRoomAgenda: async (room_name: string) => {
         return fetch('/setRoomAgenda', {
           method: 'POST',
@@ -111,8 +110,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           },
           body: JSON.stringify({ room_name }),
         }).then(res => res.json());
-      },
-      // 
+      }, 
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 

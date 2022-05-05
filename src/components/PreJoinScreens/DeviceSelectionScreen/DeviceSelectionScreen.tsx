@@ -94,15 +94,13 @@ export default function DeviceSelectionScreen({
         duration,
         agendaItems
       });
-    // 
-    // //
-    // // //
+      
     } else {
       const allRoomAgendas = await getRoomAgenda(roomName);
 
       console.log('saveMeetingAgenda', saveMeetingAgenda);
       console.log('allRoomAgendas',    allRoomAgendas);
-      
+
       // setRoomAgendaInAppState({
       //   roomAgenda.roomName,
       //   roomAgenda.duration,
