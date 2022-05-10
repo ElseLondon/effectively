@@ -25,38 +25,6 @@ const authMiddleware =
 app.all('/token', authMiddleware, tokenEndpoint);
 app.all('/recordingrules', authMiddleware, recordingRulesEndpoint);
 
-// 
-// //
-// // // 
-const meetingRoomAgendaDetails: any = {}; // fix any | this could end up as needing a database? for now it works but in deployment?
-
-app.use('/setRoomAgenda', (req, res) => {
-  const roomName = Object.keys(req.body)[0];
-
-  meetingRoomAgendaDetails[roomName] = req.body[roomName];
-
-  // 
-  console.log('req.body',                 JSON.stringify(req.body));
-  console.log('roomName',                 roomName);
-  console.log('meetingRoomAgendaDetails', JSON.stringify(meetingRoomAgendaDetails));
-  // 
-
-  res.status(200).send(meetingRoomAgendaDetails); // do we need to send these back for now?
-})
-
-app.use('/getRoomAgenda', (req, res) => {
-  
-
-  // 
-  console.log('req.body', JSON.stringify(req.body));
-  // 
-
-  res.status(200).send(meetingRoomAgendaDetails);
-})
-// // //
-// //
-// 
-
 app.use((req, res, next) => {
   // Here we add Cache-Control headers in accordance with the create-react-app best practices.
   // See: https://create-react-app.dev/docs/production-build/#static-file-caching

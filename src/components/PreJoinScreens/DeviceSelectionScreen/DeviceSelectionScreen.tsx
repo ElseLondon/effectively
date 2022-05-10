@@ -64,6 +64,35 @@ interface DeviceSelectionScreenProps {
   setRoomAgendaInAppState: (roomAgenda: RoomAgenda) => void;
 }
 
+const setRoomAgenda = async(
+  room_name: string,
+  room_duration: number,
+  agenda_items: AgendaItem[]
+) => {
+  return fetch('https://effectively-server.ew.r.appspot.com/setRoomAgenda', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      [room_name]: {
+        room_duration,
+        agenda_items
+      }
+    }),
+  }).then(async res => res.json());
+};
+
+const getRoomAgenda = async(room_name: string) => {
+  return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ room_name }),
+  }).then(async res => res.json());
+};
+
 export default function DeviceSelectionScreen({ 
   name,
   roomName,
@@ -71,11 +100,11 @@ export default function DeviceSelectionScreen({
   durationCheckboxChecked,
   agendaItems,
   setStep,
-  setRoomAgendaInAppState
+  // setRoomAgendaInAppState
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
-  const { getToken, setRoomAgenda, getRoomAgenda, isFetching } = useAppState();
+  const { getToken, /* setRoomAgenda, getRoomAgenda, */ isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
@@ -94,11 +123,12 @@ export default function DeviceSelectionScreen({
     console.log('allRoomAgendas', allRoomAgendas);  // 
     // // // // // // // // // // // // // // // // // 
 
-    setRoomAgendaInAppState({
-      roomName,
-      duration: allRoomAgendas[roomName].room_duration,
-      agendaItems: allRoomAgendas[roomName].agenda_items
-    });
+
+    // setRoomAgendaInAppState({
+    //   roomName,
+    //   duration: allRoomAgendas[roomName].room_duration,
+    //   agendaItems: allRoomAgendas[roomName].agenda_items
+    // });
 
     getToken(
       name,

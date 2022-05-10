@@ -30,8 +30,6 @@ export interface StateContextType {
   dispatchSetting: React.Dispatch<SettingsAction>;
   roomType?: RoomType;
   updateRecordingRules(room_sid: string, rules: RecordingRules): Promise<object>;
-  setRoomAgenda(room: string, duration: number, agendaItems: AgendaItem[]): Promise<RoomAgenda>;
-  getRoomAgenda(room: string): Promise<RoomAgenda>;
 }
 
 export const StateContext = createContext<StateContextType>(null!);
@@ -91,33 +89,6 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
           }),
         }).then(res => res.json());
       },
-      setRoomAgenda: async (
-        room_name: string,
-        room_duration: number,
-        agenda_items: AgendaItem[]
-      ) => {
-        return fetch('/setRoomAgenda', {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({
-            [room_name]: {
-              room_duration,
-              agenda_items
-            }
-          }),
-        }).then(res => res.json());
-      },
-      getRoomAgenda: async (room_name: string) => {
-        return fetch('/getRoomAgenda', {
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: JSON.stringify({ room_name }),
-        }).then(res => res.json());
-      }, 
       updateRecordingRules: async (room_sid, rules) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/recordingrules';
 
@@ -177,36 +148,8 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
       });
   };
 
-  const setRoomAgenda: StateContextType['setRoomAgenda'] = (room, duration, agendaItems) => {
-    return contextValue
-      .setRoomAgenda(room, duration, agendaItems)
-      .then(res => {
-        setIsFetching(false);
-        return res;
-      })
-      .catch(err => {
-        setError(err);
-        setIsFetching(false);
-        return Promise.reject(err);
-      });
-  };
-
-  const getRoomAgenda: StateContextType['getRoomAgenda'] = (room) => {
-    return contextValue
-      .getRoomAgenda(room)
-      .then(res => {
-        setIsFetching(false);
-        return res;
-      })
-      .catch(err => {
-        setError(err);
-        setIsFetching(false);
-        return Promise.reject(err);
-      });
-  };
-
   return (
-    <StateContext.Provider value={{ ...contextValue, getToken, setRoomAgenda, getRoomAgenda, updateRecordingRules }}>
+    <StateContext.Provider value={{ ...contextValue, getToken, updateRecordingRules }}>
       {props.children}
     </StateContext.Provider>
   );

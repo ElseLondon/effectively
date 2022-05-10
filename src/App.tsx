@@ -46,7 +46,7 @@ export default function App() {
   // 
   // //
   // // //
-  console.log('App.tsx|roomAgendaInAppState|', roomAgendaInAppState);
+  // console.log('App.tsx|roomAgendaInAppState|', roomAgendaInAppState);
   // // //
   // //
   // 
