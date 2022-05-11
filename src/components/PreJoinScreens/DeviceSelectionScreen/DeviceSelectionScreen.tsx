@@ -104,7 +104,7 @@ export default function DeviceSelectionScreen({
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
-  const { getToken, /* setRoomAgenda, getRoomAgenda, */ isFetching } = useAppState();
+  const { getToken, isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
