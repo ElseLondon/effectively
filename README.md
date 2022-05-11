@@ -65,6 +65,10 @@ The app is deployed to Twilio with a single command:
 
     npm run deploy:twilio-cli
 
+If the app has already been deployed, use the following command to override it:
+
+    npm run deploy:twilio-cli -- --override
+
 This performs the following steps:
 
 - Builds the React app in the `src` directory

@@ -14,8 +14,10 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        duration={10}
         setName={() => {}}
         setRoomName={() => {}}
+        setDuration={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -30,8 +32,10 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        duration={10}
         setName={() => {}}
         setRoomName={() => {}}
+        setDuration={() => {}}
         handleSubmit={() => {}}
       />
     );
@@ -43,6 +47,7 @@ describe('the RoomNameScreen component', () => {
   it('should render correctly when there is a logged in user and "customIdentity=true" query parameter"', () => {
     mockUseAppState.mockImplementationOnce(() => ({ user: { displayName: 'Test Name' } }));
 
+    // @ts-ignore
     delete window.location;
     // @ts-ignore
     window.location = {
@@ -53,8 +58,10 @@ describe('the RoomNameScreen component', () => {
       <RoomNameScreen
         name="test"
         roomName="testRoom"
+        duration={10}
         setName={() => {}}
         setRoomName={() => {}}
+        setDuration={() => {}}
         handleSubmit={() => {}}
       />
     );
