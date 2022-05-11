@@ -12,6 +12,7 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
+import { RoomAgenda } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,12 +63,24 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function MenuBar() {
+interface MenuBarProps {
+  roomAgendaInAppState: RoomAgenda;
+}
+
+export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   const classes = useStyles();
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
+
+  // 
+  // //
+  // // //
+  console.log('MenuBar.tsx|roomAgendaInAppState|', roomAgendaInAppState);
+  // // //
+  // //
+  // 
 
   // 
   const hoursMinSecs = {hours:0, minutes: 5, seconds: 0}

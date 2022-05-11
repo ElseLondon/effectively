@@ -10,6 +10,7 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import { RoomAgenda } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
@@ -45,33 +46,30 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
+interface RoomProps {
+  roomAgendaInAppState: RoomAgenda;
+}
+
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function Room() {
+export default function Room({ roomAgendaInAppState }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { room, isBackgroundSelectionOpen } = useVideoContext();
+  const { /* room, */ isBackgroundSelectionOpen } = useVideoContext();
 
-  const [data, setData] = React.useState({});
   const [timerClock, setTimerClock] = React.useState(300);
   const [progress, setProgress] = React.useState(0);
   const [open, setOpen] = React.useState(false);
 
-  React.useEffect(() => {
-    fetch('/fetchMeetingAgendaDetails', {
-      method: 'GET',
-      headers: {
-        'content-type': 'application/json',
-      },
-    }).then(res => res.json())
-      .then((res) => {
-        console.log('our room data', res[room!.name]);
-        const meetingRoomDetails = res[room!.name];
-        setData(meetingRoomDetails);
-      });
-  }, []);
+  // 
+  // //
+  // // //
+  console.log('Room.tsx|roomAgendaInAppState|', roomAgendaInAppState);
+  // // //
+  // //
+  // 
 
   React.useEffect(() => {
     const timer = setTimeout(function() {
@@ -93,7 +91,7 @@ export default function Room() {
     }
   }, [timerClock]);
 
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+  const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }

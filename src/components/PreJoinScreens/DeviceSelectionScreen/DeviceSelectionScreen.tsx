@@ -10,7 +10,7 @@ import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { AgendaItem } from '../RoomNameScreen/RoomNameScreen';
-import { RoomAgenda } from '../../../App';
+import { RoomAgenda } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -125,9 +125,10 @@ export default function DeviceSelectionScreen({
 
 
     // setRoomAgendaInAppState({
-    //   roomName,
-    //   duration: allRoomAgendas[roomName].room_duration,
-    //   agendaItems: allRoomAgendas[roomName].agenda_items
+    //   [roomName]: {
+    //     duration: allRoomAgendas[roomName].room_duration,
+    //     agendaItems: allRoomAgendas[roomName].agenda_items
+    //   }
     // });
 
     getToken(
