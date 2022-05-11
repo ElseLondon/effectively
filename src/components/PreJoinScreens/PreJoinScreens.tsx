@@ -6,20 +6,33 @@ import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
+import { AgendaItem } from './RoomNameScreen/RoomNameScreen';
+import { RoomAgenda } from '../../App';
 
 export enum Steps {
   roomNameStep,
   deviceSelectionStep,
 }
 
-export default function PreJoinScreens() {
+interface PreJoinScreensProps {
+  setRoomAgendaInAppState: (roomAgenda: RoomAgenda) => void;
+}
+
+export default function PreJoinScreens({
+  setRoomAgendaInAppState
+}: PreJoinScreensProps) {
+  
   const { user } = useAppState();
   const { getAudioAndVideoTracks } = useVideoContext();
-  const { URLRoomName } = useParams();
+  // @ts-ignore
+  const { URLRoomName } = useParams(); 
   const [step, setStep] = useState(Steps.roomNameStep);
 
   const [name, setName] = useState<string>(user?.displayName || '');
   const [roomName, setRoomName] = useState<string>('');
+  const [duration, setDuration] = useState<number>(0);
+  const [durationCheckboxChecked, setDurationCheckboxChecked] = useState<boolean | undefined>(false);
+  const [agendaItems, setAgendaItems] = useState<Array<AgendaItem>>([]);
 
   const [mediaError, setMediaError] = useState<Error>();
 
@@ -58,14 +71,28 @@ export default function PreJoinScreens() {
         <RoomNameScreen
           name={name}
           roomName={roomName}
+          duration={duration}
+          durationCheckboxChecked={durationCheckboxChecked}
+          agendaItems={agendaItems}
           setName={setName}
           setRoomName={setRoomName}
+          setDuration={setDuration}
+          setDurationCheckboxChecked={setDurationCheckboxChecked}
+          setAgendaItems={setAgendaItems}
           handleSubmit={handleSubmit}
         />
       )}
 
       {step === Steps.deviceSelectionStep && (
-        <DeviceSelectionScreen name={name} roomName={roomName} setStep={setStep} />
+        <DeviceSelectionScreen
+          name={name}
+          roomName={roomName}
+          duration={duration}
+          durationCheckboxChecked={durationCheckboxChecked}
+          agendaItems={agendaItems}
+          setStep={setStep}
+          setRoomAgendaInAppState={setRoomAgendaInAppState}
+        />
       )}
     </IntroContainer>
   );

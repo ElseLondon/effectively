@@ -6,6 +6,14 @@ import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { User } from 'firebase';
+import { AgendaItem } from '../components/PreJoinScreens/RoomNameScreen/RoomNameScreen';
+
+export interface RoomAgenda {
+  [key:string]: { 
+    room_duration: number, 
+    agenda_items: AgendaItem[]
+  }
+}
 
 export interface StateContextType {
   error: TwilioError | Error | null;
@@ -66,7 +74,7 @@ export default function AppStateProvider(props: React.PropsWithChildren<{}>) {
   } else {
     contextValue = {
       ...contextValue,
-      getToken: async (user_identity, room_name) => {
+      getToken: async (user_identity: string, room_name: string) => {
         const endpoint = process.env.REACT_APP_TOKEN_ENDPOINT || '/token';
 
         return fetch(endpoint, {

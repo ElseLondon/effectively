@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
@@ -7,6 +7,7 @@ import PreJoinScreens from './components/PreJoinScreens/PreJoinScreens';
 import ReconnectingNotification from './components/ReconnectingNotification/ReconnectingNotification';
 import RecordingNotifications from './components/RecordingNotifications/RecordingNotifications';
 import Room from './components/Room/Room';
+import { AgendaItem } from './components/PreJoinScreens/RoomNameScreen/RoomNameScreen';
 
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
@@ -25,8 +26,15 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
   },
 }));
 
+export interface RoomAgenda {
+  roomName: string;
+  duration: number;
+  agendaItems: AgendaItem[];
+};
+
 export default function App() {
   const roomState = useRoomState();
+  const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({roomName: '', duration: 0, agendaItems: []});
 
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,
@@ -35,17 +43,25 @@ export default function App() {
   // will look good on mobile browsers even after the location bar opens or closes.
   const height = useHeight();
 
+  // 
+  // //
+  // // //
+  // console.log('App.tsx|roomAgendaInAppState|', roomAgendaInAppState);
+  // // //
+  // //
+  // 
+
   return (
     <Container style={{ height }}>
       {roomState === 'disconnected' ? (
-        <PreJoinScreens />
+        <PreJoinScreens setRoomAgendaInAppState={setRoomAgendaInAppState}/>
       ) : (
         <Main>
           <ReconnectingNotification />
           <RecordingNotifications />
           <MobileTopMenuBar />
-          <Room />
-          <MenuBar />
+          <Room    /*roomAgendaInAppState={roomAgendaInAppState}*//>
+          <MenuBar /*roomAgendaInAppState={roomAgendaInAppState}*//>
         </Main>
       )}
     </Container>

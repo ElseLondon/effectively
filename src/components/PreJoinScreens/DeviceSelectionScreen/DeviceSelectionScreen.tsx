@@ -9,6 +9,8 @@ import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton
 import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
+import { AgendaItem } from '../RoomNameScreen/RoomNameScreen';
+import { RoomAgenda } from '../../../App';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -55,18 +57,83 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface DeviceSelectionScreenProps {
   name: string;
   roomName: string;
+  duration: number;
+  durationCheckboxChecked: boolean | undefined;
+  agendaItems: AgendaItem[];
   setStep: (step: Steps) => void;
+  setRoomAgendaInAppState: (roomAgenda: RoomAgenda) => void;
 }
 
-export default function DeviceSelectionScreen({ name, roomName, setStep }: DeviceSelectionScreenProps) {
+const setRoomAgenda = async(
+  room_name: string,
+  room_duration: number,
+  agenda_items: AgendaItem[]
+) => {
+  return fetch('https://effectively-server.ew.r.appspot.com/setRoomAgenda', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      [room_name]: {
+        room_duration,
+        agenda_items
+      }
+    }),
+  }).then(async res => res.json());
+};
+
+const getRoomAgenda = async(room_name: string) => {
+  return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ room_name }),
+  }).then(async res => res.json());
+};
+
+export default function DeviceSelectionScreen({ 
+  name,
+  roomName,
+  duration,
+  durationCheckboxChecked,
+  agendaItems,
+  setStep,
+  // setRoomAgendaInAppState
+}: DeviceSelectionScreenProps) {
+
   const classes = useStyles();
   const { getToken, isFetching } = useAppState();
   const { connect: chatConnect } = useChatContext();
   const { connect: videoConnect, isAcquiringLocalTracks, isConnecting } = useVideoContext();
   const disableButtons = isFetching || isAcquiringLocalTracks || isConnecting;
 
-  const handleJoin = () => {
-    getToken(name, roomName).then(({ token }) => {
+  const handleJoin = async () => {
+    const saveMeetingAgenda = durationCheckboxChecked && duration > 0;
+    let allRoomAgendas;
+
+    if (saveMeetingAgenda) {
+      allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
+    } else {
+      allRoomAgendas = await getRoomAgenda(roomName);
+    };
+
+    // leave this logging in for debugging // // // // 
+    console.log('allRoomAgendas', allRoomAgendas);  // 
+    // // // // // // // // // // // // // // // // // 
+
+
+    // setRoomAgendaInAppState({
+    //   roomName,
+    //   duration: allRoomAgendas[roomName].room_duration,
+    //   agendaItems: allRoomAgendas[roomName].agenda_items
+    // });
+
+    getToken(
+      name,
+      roomName,
+    ).then(({ token }) => {
       videoConnect(token);
       process.env.REACT_APP_DISABLE_TWILIO_CONVERSATIONS !== 'true' && chatConnect(token);
     });
