@@ -7,9 +7,9 @@ import MainParticipant from '../MainParticipant/MainParticipant';
 import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSelectionDialog';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-// import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 // import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+// import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { RoomAgenda } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -17,7 +17,10 @@ const useStyles = makeStyles((theme: Theme) => {
     theme.sidebarMobilePadding * 2 +
     theme.participantBorderWidth}px`;
   return {
-    container: {
+    mainContainer: {
+      height: '98%'
+    },
+    subContainer: {
       position: 'relative',
       height: '100%',
       display: 'grid',
@@ -29,11 +32,6 @@ const useStyles = makeStyles((theme: Theme) => {
       },
     },
     rightDrawerOpen: { gridTemplateColumns: `1fr ${theme.sidebarWidth}px ${theme.rightDrawerWidth}px` },
-    root: {
-      width: '121%',
-      height: '18px',
-      zIndex: 999
-    },
     progressBar: {
       height: '18px'
     },
@@ -50,17 +48,19 @@ interface RoomProps {
   roomAgendaInAppState: RoomAgenda;
 }
 
-function Alert(props: AlertProps) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
+// function Alert(props: AlertProps) {
+//   return <MuiAlert elevation={6} variant="filled" {...props} />;
+// }
 
 export default function Room({ roomAgendaInAppState }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { room, isBackgroundSelectionOpen } = useVideoContext();
 
-  // const [timerClock, setTimerClock] = React.useState(300);
-  // const [progress, setProgress] = React.useState(0);
+  const durationInSeconds = roomAgendaInAppState[room!.name].room_duration * 60;
+
+  const [timerClock, setTimerClock] = React.useState(durationInSeconds);
+  const [progress, setProgress] = React.useState(0);
   // const [open, setOpen] = React.useState(false);
 
   // 
@@ -69,31 +69,32 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   useEffect(() => {
     console.log('Room.tsx|roomAgendaInAppState[room!.name].room_duration|', roomAgendaInAppState[room!.name].room_duration);
     console.log('Room.tsx|roomAgendaInAppState[room!.name].agenda_items|',  roomAgendaInAppState[room!.name].agenda_items);
+    console.log('Room.tsx|durationInSeconds|',                              durationInSeconds);
   }, []);
   // // //
   // //
   // 
 
-  // useEffect(() => {
-  //   const timer = setTimeout(function() {
-  //     const timeElapsed = 300 - timerClock;
-  //     const currentProgress = timeElapsed / 3;
-  // 
-  //     // console.log('-------------------');
-  //     // console.log("minus: ",       timerClock);
-  //     // console.log('timeElapsed: ', timeElapsed);
-  //     // console.log('currentProgress: ', currentProgress);
-  // 
-  //     if (timeElapsed === 10) { setOpen(true) };
-  //     if (timeElapsed === 20) { setOpen(true) };
-  //     if (timeElapsed === 30) { setOpen(true) };
-  // 
-  //     setProgress(currentProgress);
-  //     setTimerClock(timerClock - 1);
-  //   }, 1000)
-  // 
-  //   return () => clearTimeout(timer);
-  // }, [timerClock]);
+  useEffect(() => {
+    const timer = setTimeout(function() {
+      const timeElapsed = durationInSeconds - timerClock;
+      const currentProgress = (timeElapsed / durationInSeconds) * 100;
+  
+      setProgress(currentProgress);
+      setTimerClock(timerClock - 1);
+
+      console.log('-------------------');
+      console.log("minus: ",       timerClock);
+      console.log('timeElapsed: ', timeElapsed);
+      console.log('currentProgress: ', currentProgress);
+  
+      // if (timeElapsed === 10) { setOpen(true) };
+      // if (timeElapsed === 20) { setOpen(true) };
+      // if (timeElapsed === 30) { setOpen(true) };
+    }, 1000)
+  
+    return () => clearTimeout(timer);
+  }, [timerClock]);
 
   // const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
   //   if (reason === 'clickaway') return;
@@ -101,31 +102,28 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   // };
 
   return (
-    <div
-      className={clsx(classes.container, {
-        [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
-      })}
-    >
-      {/* Refactor to own TimeBar Component */}
-      {/* <div className={classes.root}>
-        <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} />
-      </div> */}
-      {/*  */}
+    <div className={classes.mainContainer}>
+      <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} />
+      <div
+        className={clsx(classes.subContainer, {
+          [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
+        })}
+      >  
+        {/* Refactor to own Component? */}
+        {/* <div className={classes.snackbarRoot} >
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="info">
+              Please move onto next topic!
+            </Alert>
+          </Snackbar>
+        </div> */}
+        {/*  */}
 
-      {/* Refactor to own Component? */}
-      {/* <div className={classes.snackbarRoot} >
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="info">
-            Please move onto next topic!
-          </Alert>
-        </Snackbar>
-      </div> */}
-      {/*  */}
-
-      <MainParticipant />
-      <ParticipantList />
-      <ChatWindow />
-      <BackgroundSelectionDialog />
+        <MainParticipant />
+        <ParticipantList />
+        <ChatWindow />
+        <BackgroundSelectionDialog />
+      </div>
     </div>
   );
 }
