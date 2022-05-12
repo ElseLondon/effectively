@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
@@ -77,13 +77,15 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   // 
   // //
   // // //
-  console.log('MenuBar.tsx|roomAgendaInAppState|', roomAgendaInAppState);
+  useEffect(() => {
+    console.log('MenuBar.tsx|roomAgendaInAppState[room!.name].room_duration|', roomAgendaInAppState[room!.name].room_duration);
+  }, []);
   // // //
   // //
   // 
 
   // 
-  const hoursMinSecs = {hours:0, minutes: 5, seconds: 0}
+  const hoursMinSecs = { hours:0, minutes: 5, seconds: 0 }
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
   const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
 
@@ -91,17 +93,17 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
 
   const tick = () => {
     if (hrs === 0 && mins === 0 && secs === 0) 
-        reset()
+      reset();
     else if (mins === 0 && secs === 0) {
-        setTime([hrs - 1, 59, 59]);
+      setTime([hrs - 1, 59, 59]);
     } else if (secs === 0) {
-        setTime([hrs, mins - 1, 59]);
+      setTime([hrs, mins - 1, 59]);
     } else {
-        setTime([hrs, mins, secs - 1]);
+      setTime([hrs, mins, secs - 1]);
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timerId = setInterval(() => tick(), 1000);
     return () => clearInterval(timerId);
   });
@@ -120,13 +122,15 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Typography variant="body1">{room!.name}</Typography>
+              {/* Refactor to Timer Component? */}
               <div>
                 <p>
                   {`${hrs.toString().padStart(2, '0')}:
                   ${mins.toString().padStart(2, '0')}:
                   ${secs.toString().padStart(2, '0')}`}
                 </p>
-            </div>
+              </div>
+              {/* --------------------------- */}
             </Grid>
           </Hidden>
           <Grid item>

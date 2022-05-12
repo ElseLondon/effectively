@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core';
 import ChatWindow from '../ChatWindow/ChatWindow';
@@ -57,7 +57,7 @@ function Alert(props: AlertProps) {
 export default function Room({ roomAgendaInAppState }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
-  const { /* room, */ isBackgroundSelectionOpen } = useVideoContext();
+  const { room, isBackgroundSelectionOpen } = useVideoContext();
 
   const [timerClock, setTimerClock] = React.useState(300);
   const [progress, setProgress] = React.useState(0);
@@ -66,36 +66,37 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   // 
   // //
   // // //
-  console.log('Room.tsx|roomAgendaInAppState|', roomAgendaInAppState);
+  useEffect(() => {
+    console.log('Room.tsx|roomAgendaInAppState[room!.name].room_duration|', roomAgendaInAppState[room!.name].room_duration);
+    console.log('Room.tsx|roomAgendaInAppState[room!.name].agenda_items|',  roomAgendaInAppState[room!.name].agenda_items);
+  }, []);
   // // //
   // //
   // 
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(function() {
       const timeElapsed = 300 - timerClock;
       const currentProgress = timeElapsed / 3;
-      console.log('-------------------');
-      console.log("minus: ",       timerClock);
-      console.log('timeElapsed: ', timeElapsed);
-      console.log('currentProgress: ', currentProgress);
+
+      // console.log('-------------------');
+      // console.log("minus: ",       timerClock);
+      // console.log('timeElapsed: ', timeElapsed);
+      // console.log('currentProgress: ', currentProgress);
+
       if (timeElapsed === 10) { setOpen(true) };
       if (timeElapsed === 20) { setOpen(true) };
       if (timeElapsed === 30) { setOpen(true) };
+
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
     }, 1000)
 
-    return () => {
-      clearTimeout(timer)
-    }
+    return () => clearTimeout(timer);
   }, [timerClock]);
 
   const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
+    if (reason === 'clickaway') return;
     setOpen(false);
   };
 
@@ -105,10 +106,13 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
         [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
       })}
     >
+      {/* Refactor to own TimeBar Component */}
       <div className={classes.root}>
         <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} />
       </div>
+      {/*  */}
 
+      {/* Refactor to own Component? */}
       <div className={classes.snackbarRoot} >
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="info">
@@ -116,6 +120,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
           </Alert>
         </Snackbar>
       </div>
+      {/*  */}
 
       <MainParticipant />
       <ParticipantList />

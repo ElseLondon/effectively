@@ -100,7 +100,7 @@ export default function DeviceSelectionScreen({
   durationCheckboxChecked,
   agendaItems,
   setStep,
-  // setRoomAgendaInAppState
+  setRoomAgendaInAppState
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
@@ -115,21 +115,22 @@ export default function DeviceSelectionScreen({
 
     if (saveMeetingAgenda) {
       allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
+      setRoomAgendaInAppState({
+        [roomName]: {
+          room_duration: allRoomAgendas[roomName].room_duration,
+          agenda_items: allRoomAgendas[roomName].agenda_items
+        }
+      });
     } else {
       allRoomAgendas = await getRoomAgenda(roomName);
+      const room_duration = allRoomAgendas[roomName] ? allRoomAgendas[roomName].room_duration : 0;
+      const agenda_items = allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : [];
+      setRoomAgendaInAppState({ [roomName]: { room_duration, agenda_items }});
     };
 
     // leave this logging in for debugging // // // // 
     console.log('allRoomAgendas', allRoomAgendas);  // 
     // // // // // // // // // // // // // // // // // 
-
-
-    // setRoomAgendaInAppState({
-    //   [roomName]: {
-    //     duration: allRoomAgendas[roomName].room_duration,
-    //     agendaItems: allRoomAgendas[roomName].agenda_items
-    //   }
-    // });
 
     getToken(
       name,
