@@ -97,10 +97,10 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
     return () => clearInterval(timerId);
   });
 
-  const formatTimeRemaining = (hrs: number, mins: number, secs: number) => {
-    return `${hrs.toString().padStart(2, '0')}:
-      ${mins.toString().padStart(2, '0')}:
-      ${secs.toString().padStart(2, '0')}`
+  const formatTimeRemaining = (h: number, m: number, s: number) => {
+    return `${h.toString().padStart(2, '0')}:
+      ${m.toString().padStart(2, '0')}:
+      ${s.toString().padStart(2, '0')}`
   };
 
   return (

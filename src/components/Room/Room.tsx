@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core';
 import ChatWindow from '../ChatWindow/ChatWindow';
@@ -9,7 +9,7 @@ import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
 // import Snackbar from '@material-ui/core/Snackbar';
-// import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { RoomAgenda } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -59,17 +59,29 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
 
   const durationInSeconds = roomAgendaInAppState[room!.name].room_duration * 60;
 
-  const [timerClock, setTimerClock] = React.useState(durationInSeconds);
-  const [progress, setProgress] = React.useState(0);
-  // const [open, setOpen] = React.useState(false);
+  const [timerClock, setTimerClock] = useState(durationInSeconds);
+  const [progress, setProgress] = useState(0);
+  const [agendaPointOverallDurations, setAgendaPointOverallDurations] = useState<number[]>([])
+  // const [open, setOpen] = useState(false);
 
   // 
   // //
   // // //
   useEffect(() => {
-    console.log('Room.tsx|roomAgendaInAppState[room!.name].room_duration|', roomAgendaInAppState[room!.name].room_duration);
-    console.log('Room.tsx|roomAgendaInAppState[room!.name].agenda_items|',  roomAgendaInAppState[room!.name].agenda_items);
-    console.log('Room.tsx|durationInSeconds|',                              durationInSeconds);
+    let overallDuration = 0;
+
+    const agendaTimeline = roomAgendaInAppState[room!.name].agenda_items.map((agendaItem) => {
+      const duration = agendaItem.duration * 60;
+      overallDuration = overallDuration + duration;
+      return overallDuration
+    });
+
+    setAgendaPointOverallDurations(agendaTimeline);
+
+    console.log('durationInSeconds', durationInSeconds);
+    console.log('roomAgendaInAppState[room!.name].agenda_items', roomAgendaInAppState[room!.name].agenda_items);
+    console.log('roomAgendaInAppState[room!.name].agenda_items.length', roomAgendaInAppState[room!.name].agenda_items.length);
+    console.log('agendaTimeline', agendaTimeline);
   }, []);
   // // //
   // //
@@ -83,14 +95,13 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
 
-      console.log('-------------------');
-      console.log("minus: ",       timerClock);
       console.log('timeElapsed: ', timeElapsed);
-      console.log('currentProgress: ', currentProgress);
+      console.log('agendaPointOverallDurations: ', agendaPointOverallDurations);
   
       // if (timeElapsed === 10) { setOpen(true) };
-      // if (timeElapsed === 20) { setOpen(true) };
-      // if (timeElapsed === 30) { setOpen(true) };
+      // use indexOf to see if timeElapsed is equal to any overallDuration
+      // if it is, setOpen to true
+      // use the index from indexOf to adjust the description(store as currentAgendaPointIndex in state)
     }, 1000)
   
     return () => clearTimeout(timer);
