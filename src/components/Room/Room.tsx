@@ -7,8 +7,8 @@ import MainParticipant from '../MainParticipant/MainParticipant';
 import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSelectionDialog';
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import LinearProgress from '@material-ui/core/LinearProgress';
-import Snackbar from '@material-ui/core/Snackbar';
+// import LinearProgress from '@material-ui/core/LinearProgress';
+// import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { RoomAgenda } from '../../state';
 
@@ -59,9 +59,9 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   const { isChatWindowOpen } = useChatContext();
   const { room, isBackgroundSelectionOpen } = useVideoContext();
 
-  const [timerClock, setTimerClock] = React.useState(300);
-  const [progress, setProgress] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
+  // const [timerClock, setTimerClock] = React.useState(300);
+  // const [progress, setProgress] = React.useState(0);
+  // const [open, setOpen] = React.useState(false);
 
   // 
   // //
@@ -74,31 +74,31 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   // //
   // 
 
-  useEffect(() => {
-    const timer = setTimeout(function() {
-      const timeElapsed = 300 - timerClock;
-      const currentProgress = timeElapsed / 3;
+  // useEffect(() => {
+  //   const timer = setTimeout(function() {
+  //     const timeElapsed = 300 - timerClock;
+  //     const currentProgress = timeElapsed / 3;
+  // 
+  //     // console.log('-------------------');
+  //     // console.log("minus: ",       timerClock);
+  //     // console.log('timeElapsed: ', timeElapsed);
+  //     // console.log('currentProgress: ', currentProgress);
+  // 
+  //     if (timeElapsed === 10) { setOpen(true) };
+  //     if (timeElapsed === 20) { setOpen(true) };
+  //     if (timeElapsed === 30) { setOpen(true) };
+  // 
+  //     setProgress(currentProgress);
+  //     setTimerClock(timerClock - 1);
+  //   }, 1000)
+  // 
+  //   return () => clearTimeout(timer);
+  // }, [timerClock]);
 
-      // console.log('-------------------');
-      // console.log("minus: ",       timerClock);
-      // console.log('timeElapsed: ', timeElapsed);
-      // console.log('currentProgress: ', currentProgress);
-
-      if (timeElapsed === 10) { setOpen(true) };
-      if (timeElapsed === 20) { setOpen(true) };
-      if (timeElapsed === 30) { setOpen(true) };
-
-      setProgress(currentProgress);
-      setTimerClock(timerClock - 1);
-    }, 1000)
-
-    return () => clearTimeout(timer);
-  }, [timerClock]);
-
-  const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') return;
-    setOpen(false);
-  };
+  // const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
+  //   if (reason === 'clickaway') return;
+  //   setOpen(false);
+  // };
 
   return (
     <div
@@ -107,19 +107,19 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
       })}
     >
       {/* Refactor to own TimeBar Component */}
-      <div className={classes.root}>
+      {/* <div className={classes.root}>
         <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} />
-      </div>
+      </div> */}
       {/*  */}
 
       {/* Refactor to own Component? */}
-      <div className={classes.snackbarRoot} >
+      {/* <div className={classes.snackbarRoot} >
         <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
           <Alert onClose={handleClose} severity="info">
             Please move onto next topic!
           </Alert>
         </Snackbar>
-      </div>
+      </div> */}
       {/*  */}
 
       <MainParticipant />

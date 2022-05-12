@@ -74,18 +74,7 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
 
-  // 
-  // //
-  // // //
-  useEffect(() => {
-    console.log('MenuBar.tsx|roomAgendaInAppState[room!.name].room_duration|', roomAgendaInAppState[room!.name].room_duration);
-  }, []);
-  // // //
-  // //
-  // 
-
-  // 
-  const hoursMinSecs = { hours:0, minutes: 5, seconds: 0 }
+  const hoursMinSecs = { hours:0, minutes: roomAgendaInAppState[room!.name].room_duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
   const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
 
@@ -107,7 +96,12 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
     const timerId = setInterval(() => tick(), 1000);
     return () => clearInterval(timerId);
   });
-  // 
+
+  const formatTimeRemaining = (hrs: number, mins: number, secs: number) => {
+    return `${hrs.toString().padStart(2, '0')}:
+      ${mins.toString().padStart(2, '0')}:
+      ${secs.toString().padStart(2, '0')}`
+  };
 
   return (
     <>
@@ -121,16 +115,7 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
         <Grid container justifyContent="space-around" alignItems="center">
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
-              <Typography variant="body1">{room!.name}</Typography>
-              {/* Refactor to Timer Component? */}
-              <div>
-                <p>
-                  {`${hrs.toString().padStart(2, '0')}:
-                  ${mins.toString().padStart(2, '0')}:
-                  ${secs.toString().padStart(2, '0')}`}
-                </p>
-              </div>
-              {/* --------------------------- */}
+              <Typography variant="body1">{room!.name} | {formatTimeRemaining(hrs, mins, secs)}</Typography>
             </Grid>
           </Hidden>
           <Grid item>

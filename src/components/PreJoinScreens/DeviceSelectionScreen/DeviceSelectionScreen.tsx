@@ -123,14 +123,13 @@ export default function DeviceSelectionScreen({
       });
     } else {
       allRoomAgendas = await getRoomAgenda(roomName);
-      const room_duration = allRoomAgendas[roomName] ? allRoomAgendas[roomName].room_duration : 0;
-      const agenda_items = allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : [];
-      setRoomAgendaInAppState({ [roomName]: { room_duration, agenda_items }});
+      setRoomAgendaInAppState({ 
+        [roomName]: { 
+          room_duration: allRoomAgendas[roomName] ? allRoomAgendas[roomName].room_duration : 0,
+          agenda_items: allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : []
+        }
+      });
     };
-
-    // leave this logging in for debugging // // // // 
-    console.log('allRoomAgendas', allRoomAgendas);  // 
-    // // // // // // // // // // // // // // // // // 
 
     getToken(
       name,
