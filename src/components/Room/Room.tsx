@@ -58,6 +58,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   const { room, isBackgroundSelectionOpen } = useVideoContext();
 
   const durationInSeconds = roomAgendaInAppState[room!.name].room_duration * 60;
+  const agendaItems = roomAgendaInAppState[room!.name].agenda_items;
 
   const [timerClock, setTimerClock] = useState(durationInSeconds);
   const [progress, setProgress] = useState(0);
@@ -68,16 +69,13 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   useEffect(() => {
     let overallDuration = 0;
 
-    const agendaTimeline = roomAgendaInAppState[room!.name].agenda_items.map((agendaItem) => {
+    const agendaTimeline = agendaItems.map((agendaItem) => {
       const duration = agendaItem.duration * 60;
       overallDuration = overallDuration + duration;
       return overallDuration
     });
 
     setAgendaPointOverallDurations(agendaTimeline);
-
-    // console.log('roomAgendaInAppState[room!.name].agenda_items', roomAgendaInAppState[room!.name].agenda_items);
-    // console.log('agendaTimeline', agendaTimeline);
   }, []);
 
   useEffect(() => {
@@ -88,15 +86,11 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
 
-      // console.log('timeElapsed: ', timeElapsed);
-      // console.log('currentAgendaPointIndex: ', currentAgendaPointIndex);
-
       if (agendaPointOverallDurations.indexOf(timeElapsed) !== -1) {
-        // console.log('SNACKBAR', agendaPointOverallDurations.indexOf(timeElapsed));
-        // console.log(roomAgendaInAppState[room!.name].agenda_items[agendaPointOverallDurations.indexOf(timeElapsed)]);
         setOpen(true);
         setCurrentAgendaPointIndex(currentAgendaPointIndex + 1);
       };
+
     }, 1000)
   
     return () => clearTimeout(timer);
@@ -109,27 +103,35 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
 
   return (
     <div className={classes.mainContainer}>
-      <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} />
+      {
+        durationInSeconds ? 
+          <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} /> 
+          : null
+      }
       <div
         className={clsx(classes.subContainer, {
           [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
         })}
       >  
-        <div className={classes.snackbarRoot} >
-          <Snackbar 
-            open={open} 
-            autoHideDuration={6000} 
-            onClose={handleClose}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "center"
-            }}
-          >
-            <Alert onClose={handleClose} severity="info">
-              Please move onto next topic: {roomAgendaInAppState[room!.name].agenda_items[currentAgendaPointIndex].description}.
-            </Alert>
-          </Snackbar>
-        </div>
+        {
+          durationInSeconds ?
+          <div className={classes.snackbarRoot} >
+            <Snackbar 
+              open={open} 
+              autoHideDuration={6000} 
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "center"
+              }}
+            >
+              <Alert onClose={handleClose} severity="info">
+                Please move onto next topic: {agendaItems[currentAgendaPointIndex].description}.
+              </Alert>
+            </Snackbar>
+          </div>
+          : null
+        }
 
         <MainParticipant />
         <ParticipantList />
