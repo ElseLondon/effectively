@@ -74,7 +74,9 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
 
-  const hoursMinSecs = { hours:0, minutes: roomAgendaInAppState[room!.name].room_duration, seconds: 0 };
+  const duration = roomAgendaInAppState[room!.name].room_duration;
+
+  const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
   const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
 
@@ -98,7 +100,8 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   });
 
   const formatTimeRemaining = (h: number, m: number, s: number) => {
-    return `${h.toString().padStart(2, '0')}:
+    return ` | 
+      ${h.toString().padStart(2, '0')}:
       ${m.toString().padStart(2, '0')}:
       ${s.toString().padStart(2, '0')}`
   };
@@ -115,7 +118,7 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
         <Grid container justifyContent="space-around" alignItems="center">
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
-              <Typography variant="body1">{room!.name} | {formatTimeRemaining(hrs, mins, secs)}</Typography>
+              <Typography variant="body1">{room!.name}{duration ? formatTimeRemaining(hrs, mins, secs) : null}</Typography>
             </Grid>
           </Hidden>
           <Grid item>
