@@ -119,7 +119,7 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Typography variant="body1">
-                {room!.name}{duration ? formatTimeRemaining(hrs, mins, secs) : null}
+                {room!.name}{duration && formatTimeRemaining(hrs, mins, secs)}
               </Typography>
             </Grid>
           </Hidden>

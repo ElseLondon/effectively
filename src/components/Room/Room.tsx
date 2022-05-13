@@ -104,9 +104,8 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   return (
     <div className={classes.mainContainer}>
       {
-        durationInSeconds ? 
+        durationInSeconds &&
           <LinearProgress variant="determinate" value={progress} color="secondary" className={classes.progressBar} /> 
-          : null
       }
       <div
         className={clsx(classes.subContainer, {
@@ -114,7 +113,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
         })}
       >  
         {
-          durationInSeconds ?
+          durationInSeconds &&
           <div className={classes.snackbarRoot} >
             <Snackbar 
               open={open} 
@@ -130,7 +129,6 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
               </Alert>
             </Snackbar>
           </div>
-          : null
         }
 
         <MainParticipant />
