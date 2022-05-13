@@ -8,7 +8,7 @@ import BackgroundSelectionDialog from '../BackgroundSelectionDialog/BackgroundSe
 import useChatContext from '../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import LinearProgress from '@material-ui/core/LinearProgress';
-// import Snackbar from '@material-ui/core/Snackbar';
+import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { RoomAgenda } from '../../state';
 
@@ -48,9 +48,9 @@ interface RoomProps {
   roomAgendaInAppState: RoomAgenda;
 }
 
-// function Alert(props: AlertProps) {
-//   return <MuiAlert elevation={6} variant="filled" {...props} />;
-// }
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function Room({ roomAgendaInAppState }: RoomProps) {
   const classes = useStyles();
@@ -62,11 +62,9 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   const [timerClock, setTimerClock] = useState(durationInSeconds);
   const [progress, setProgress] = useState(0);
   const [agendaPointOverallDurations, setAgendaPointOverallDurations] = useState<number[]>([])
-  // const [open, setOpen] = useState(false);
+  const [currentAgendaPointIndex, setCurrentAgendaPointIndex] = useState<number>(0);
+  const [open, setOpen] = useState(false);
 
-  // 
-  // //
-  // // //
   useEffect(() => {
     let overallDuration = 0;
 
@@ -78,14 +76,9 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
 
     setAgendaPointOverallDurations(agendaTimeline);
 
-    console.log('durationInSeconds', durationInSeconds);
-    console.log('roomAgendaInAppState[room!.name].agenda_items', roomAgendaInAppState[room!.name].agenda_items);
-    console.log('roomAgendaInAppState[room!.name].agenda_items.length', roomAgendaInAppState[room!.name].agenda_items.length);
-    console.log('agendaTimeline', agendaTimeline);
+    // console.log('roomAgendaInAppState[room!.name].agenda_items', roomAgendaInAppState[room!.name].agenda_items);
+    // console.log('agendaTimeline', agendaTimeline);
   }, []);
-  // // //
-  // //
-  // 
 
   useEffect(() => {
     const timer = setTimeout(function() {
@@ -95,22 +88,24 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
 
-      console.log('timeElapsed: ', timeElapsed);
-      console.log('agendaPointOverallDurations: ', agendaPointOverallDurations);
-  
-      // if (timeElapsed === 10) { setOpen(true) };
-      // use indexOf to see if timeElapsed is equal to any overallDuration
-      // if it is, setOpen to true
-      // use the index from indexOf to adjust the description(store as currentAgendaPointIndex in state)
+      // console.log('timeElapsed: ', timeElapsed);
+      // console.log('currentAgendaPointIndex: ', currentAgendaPointIndex);
+
+      if (agendaPointOverallDurations.indexOf(timeElapsed) !== -1) {
+        // console.log('SNACKBAR', agendaPointOverallDurations.indexOf(timeElapsed));
+        // console.log(roomAgendaInAppState[room!.name].agenda_items[agendaPointOverallDurations.indexOf(timeElapsed)]);
+        setOpen(true);
+        setCurrentAgendaPointIndex(currentAgendaPointIndex + 1);
+      };
     }, 1000)
   
     return () => clearTimeout(timer);
   }, [timerClock]);
 
-  // const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
-  //   if (reason === 'clickaway') return;
-  //   setOpen(false);
-  // };
+  const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') return;
+    setOpen(false);
+  };
 
   return (
     <div className={classes.mainContainer}>
@@ -120,15 +115,21 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
           [classes.rightDrawerOpen]: isChatWindowOpen || isBackgroundSelectionOpen,
         })}
       >  
-        {/* Refactor to own Component? */}
-        {/* <div className={classes.snackbarRoot} >
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <div className={classes.snackbarRoot} >
+          <Snackbar 
+            open={open} 
+            autoHideDuration={6000} 
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center"
+            }}
+          >
             <Alert onClose={handleClose} severity="info">
-              Please move onto next topic!
+              Please move onto next topic: {roomAgendaInAppState[room!.name].agenda_items[currentAgendaPointIndex].description}.
             </Alert>
           </Snackbar>
-        </div> */}
-        {/*  */}
+        </div>
 
         <MainParticipant />
         <ParticipantList />
