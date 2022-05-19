@@ -80,6 +80,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   }, []);
 
   useEffect(() => {
+    // if (!meetingStarted) return;
     const timer = setTimeout(function() {
       const timeElapsed = durationInSeconds - timerClock;
       const currentProgress = (timeElapsed / durationInSeconds) * 100;
