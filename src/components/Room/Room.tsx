@@ -12,6 +12,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { RoomAgenda } from '../../state';
 
+
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
     theme.sidebarMobilePadding * 2 +
@@ -91,6 +92,12 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
         setCurrentAgendaPointIndex(currentAgendaPointIndex + 1);
       };
 
+      // 
+      // console.log('currentProgress', currentProgress);
+      // if (currentProgress === 98) setOpen(true);
+      // if (currentProgress === 100) room!.disconnect();
+      // 
+
     }, 1000)
   
     return () => clearTimeout(timer);
@@ -114,23 +121,27 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
       >  
         {
           durationInSeconds &&
-          <div className={classes.snackbarRoot} >
-            <Snackbar 
-              open={open} 
-              autoHideDuration={6000} 
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "center"
-              }}
-            >
-              <Alert onClose={handleClose} severity="info">
-                Please move onto next topic: {agendaItems[currentAgendaPointIndex].description}.
-                {/* check for if (agendaItems[currentAgendaPointIndex].description) */}
-                {/* if it doesn't exist, we say 'Meeting Adjourned' */}
-              </Alert>
-            </Snackbar>
-          </div>
+            <div className={classes.snackbarRoot} >
+              <Snackbar 
+                open={open} 
+                autoHideDuration={6000} 
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center"
+                }}
+              >
+                <Alert onClose={handleClose} severity="info">
+                  {
+                    agendaItems[currentAgendaPointIndex] ?
+                    `Please move onto next topic: ${agendaItems[currentAgendaPointIndex].description}` 
+                    : 'Meeting Adjourned - Disconnecting...'
+                  }
+                  {/* check for if (agendaItems[currentAgendaPointIndex].description) */}
+                  {/* if it doesn't exist, we say 'Meeting Adjourned' */}
+                </Alert>
+              </Snackbar>
+            </div>
         }
 
         <MainParticipant />
