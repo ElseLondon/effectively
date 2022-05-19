@@ -10,7 +10,7 @@ import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { AgendaItem } from '../RoomNameScreen/RoomNameScreen';
-import { RoomAgenda } from '../../../App';
+import { RoomAgenda } from '../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -100,7 +100,7 @@ export default function DeviceSelectionScreen({
   durationCheckboxChecked,
   agendaItems,
   setStep,
-  // setRoomAgendaInAppState
+  setRoomAgendaInAppState
 }: DeviceSelectionScreenProps) {
 
   const classes = useStyles();
@@ -115,20 +115,21 @@ export default function DeviceSelectionScreen({
 
     if (saveMeetingAgenda) {
       allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
+      setRoomAgendaInAppState({
+        [roomName]: {
+          room_duration: allRoomAgendas[roomName].room_duration,
+          agenda_items: allRoomAgendas[roomName].agenda_items
+        }
+      });
     } else {
       allRoomAgendas = await getRoomAgenda(roomName);
+      setRoomAgendaInAppState({ 
+        [roomName]: { 
+          room_duration: allRoomAgendas[roomName] ? allRoomAgendas[roomName].room_duration : 0,
+          agenda_items: allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : []
+        }
+      });
     };
-
-    // leave this logging in for debugging // // // // 
-    console.log('allRoomAgendas', allRoomAgendas);  // 
-    // // // // // // // // // // // // // // // // // 
-
-
-    // setRoomAgendaInAppState({
-    //   roomName,
-    //   duration: allRoomAgendas[roomName].room_duration,
-    //   agendaItems: allRoomAgendas[roomName].agenda_items
-    // });
 
     getToken(
       name,

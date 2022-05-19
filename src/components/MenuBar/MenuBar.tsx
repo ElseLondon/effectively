@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
@@ -12,6 +12,7 @@ import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
+import { RoomAgenda } from '../../state';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,12 +63,48 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function MenuBar() {
+interface MenuBarProps {
+  roomAgendaInAppState: RoomAgenda;
+}
+
+export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   const classes = useStyles();
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
+
+  const duration = roomAgendaInAppState[room!.name].room_duration;
+
+  const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
+  const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
+  const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
+
+  const reset = () => setTime([hours, minutes, seconds]);
+
+  const tick = () => {
+    if (hrs === 0 && mins === 0 && secs === 0) 
+      reset();
+    else if (mins === 0 && secs === 0) {
+      setTime([hrs - 1, 59, 59]);
+    } else if (secs === 0) {
+      setTime([hrs, mins - 1, 59]);
+    } else {
+      setTime([hrs, mins, secs - 1]);
+    }
+  };
+
+  useEffect(() => {
+    const timerId = setInterval(() => tick(), 1000);
+    return () => clearInterval(timerId);
+  });
+
+  const formatTimeRemaining = (h: number, m: number, s: number) => {
+    return ` | 
+      ${h.toString().padStart(2, '0')}:
+      ${m.toString().padStart(2, '0')}:
+      ${s.toString().padStart(2, '0')}`
+  };
 
   return (
     <>
@@ -81,7 +118,9 @@ export default function MenuBar() {
         <Grid container justifyContent="space-around" alignItems="center">
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
-              <Typography variant="body1">{room!.name}</Typography>
+              <Typography variant="body1">
+                {room!.name}{duration && formatTimeRemaining(hrs, mins, secs)}
+              </Typography>
             </Grid>
           </Hidden>
           <Grid item>
