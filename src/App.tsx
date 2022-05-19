@@ -29,7 +29,13 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 
 export default function App() {
   const roomState = useRoomState();
-  const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({ 'default': { room_duration: 0, agenda_items: [] }});
+  const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({
+    'default': {
+      room_duration: 0,
+      agenda_items: [],
+      meeting_started: false,
+      meeting_host: '',
+    }});
 
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
@@ -78,14 +78,14 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
 
   const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
-  const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
+  const [[hrs, mins, secs], setTime] = useState([hours, minutes, seconds]);
 
   const reset = () => setTime([hours, minutes, seconds]);
 
   const tick = () => {
-    if (hrs === 0 && mins === 0 && secs === 0) 
+    if (hrs === 0 && mins === 0 && secs === 0) {
       reset();
-    else if (mins === 0 && secs === 0) {
+    } else if (mins === 0 && secs === 0) {
       setTime([hrs - 1, 59, 59]);
     } else if (secs === 0) {
       setTime([hrs, mins - 1, 59]);

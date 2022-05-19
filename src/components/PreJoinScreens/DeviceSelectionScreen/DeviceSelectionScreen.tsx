@@ -118,7 +118,9 @@ export default function DeviceSelectionScreen({
       setRoomAgendaInAppState({
         [roomName]: {
           room_duration: allRoomAgendas[roomName].room_duration,
-          agenda_items: allRoomAgendas[roomName].agenda_items
+          agenda_items: allRoomAgendas[roomName].agenda_items,
+          meeting_started: false,
+          meeting_host: name,
         }
       });
     } else {
@@ -126,7 +128,9 @@ export default function DeviceSelectionScreen({
       setRoomAgendaInAppState({ 
         [roomName]: { 
           room_duration: allRoomAgendas[roomName] ? allRoomAgendas[roomName].room_duration : 0,
-          agenda_items: allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : []
+          agenda_items: allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : [],
+          meeting_started: false,
+          meeting_host: name,
         }
       });
     };

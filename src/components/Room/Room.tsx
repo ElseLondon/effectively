@@ -72,7 +72,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
     const agendaTimeline = agendaItems.map((agendaItem) => {
       const duration = agendaItem.duration * 60;
       overallDuration = overallDuration + duration;
-      return overallDuration
+      return overallDuration;
     });
 
     setAgendaPointOverallDurations(agendaTimeline);
@@ -126,6 +126,8 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
             >
               <Alert onClose={handleClose} severity="info">
                 Please move onto next topic: {agendaItems[currentAgendaPointIndex].description}.
+                {/* check for if (agendaItems[currentAgendaPointIndex].description) */}
+                {/* if it doesn't exist, we say 'Meeting Adjourned' */}
               </Alert>
             </Snackbar>
           </div>

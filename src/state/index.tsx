@@ -11,7 +11,9 @@ import { AgendaItem } from '../components/PreJoinScreens/RoomNameScreen/RoomName
 export interface RoomAgenda {
   [key:string]: { 
     room_duration: number, 
-    agenda_items: AgendaItem[]
+    agenda_items: AgendaItem[],
+    meeting_started: boolean,
+    meeting_host: string
   }
 }
 
