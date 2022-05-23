@@ -1,4 +1,4 @@
-import React, { useState, /* useEffect */ } from 'react';
+import React, { useState } from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
@@ -39,13 +39,6 @@ export default function App() {
       meeting_host: '',
     }});
 
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     console.log('runs once a second');
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
   // 
   // through useEffects - only run them: 
   // --if (roomAgendaInAppState.meeting_host !== '')
@@ -53,6 +46,13 @@ export default function App() {
   // can think of triggering timer here
   // can think of checking for whether meeting has started here through polling the API every 0.5/1 seconds
   // pass those down as props instead of whole roomAgendaInAppState object
+  // 
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     console.log('runs once a second');
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
   // 
 
   // Here we would like the height of the main container to be the height of the viewport.

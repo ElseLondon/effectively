@@ -67,6 +67,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+// const startMeetingTimer = async(room_name: string) => {
+//   // return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
+//   return fetch('http://localhost:8080/getRoomAgenda', {
+//     method: 'POST',
+//     headers: {
+//       'content-type': 'application/json',
+//     },
+//     body: JSON.stringify({ room_name }),
+//   }).then(async res => res.json());
+// };
+
 interface MenuBarProps {
   roomAgendaInAppState: RoomAgenda;
 }
@@ -115,6 +126,10 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
       ${s.toString().padStart(2, '0')}`
   };
 
+  const startMeeting = () => {
+    console.log('Starting meeting...');
+  }
+
   return (
     <>
       {isSharingScreen && (
@@ -148,7 +163,13 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
               <Grid container justifyContent="flex-end">
                 {
                   amIHost &&
-                  <Button className={classes.startMeetingButton} variant="contained" color="primary">
+                  <Button
+                    className={classes.startMeetingButton} 
+                    variant="contained" 
+                    color="primary"
+                    onClick={startMeeting}
+                    // disabled // disable it if meeting is started
+                  >
                     Start Meeting
                   </Button>
                 }
