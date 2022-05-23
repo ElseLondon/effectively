@@ -64,7 +64,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
   },
   agendaItemList: {
-    marginTop: '-30px'
+    marginTop: '-25px',
+    backgroundColor: 'yellow',
+    height: '460px',
+    overflowY: 'scroll',
+    border: '1px solid red'
+  },
+  agendaItemListItem: {
+    margin: '-25px 0'
   },
   addAgendaItemButton: {
     bottom: 12
@@ -223,7 +230,7 @@ export default function RoomNameScreen({
           <FormControlLabel
             className={classes.formControlLabel}
             control={<Checkbox checked={durationCheckboxChecked} onChange={chooseToSetDurationAndAgendaItems} name="checked" />}
-            label="Set Duration?"
+            label="Create New Room?"
             labelPlacement="start"
           />
 
@@ -239,6 +246,9 @@ export default function RoomNameScreen({
                   variant="outlined"
                   select
                 >
+                  {/* TestOption */}
+                  <MenuItem value={2}>2</MenuItem>
+                  {/*  */}
                   <MenuItem value={5}>5</MenuItem>
                   <MenuItem value={10}>10</MenuItem>
                   <MenuItem value={15}>15</MenuItem>
@@ -267,7 +277,7 @@ export default function RoomNameScreen({
             <List className={classes.agendaItemList}>
               {[...Array(agendaItems.length).keys()].map((agendaItemKey) => {
                 return (
-                  <ListItem key={agendaItemKey}>
+                  <ListItem className={classes.agendaItemListItem} key={agendaItemKey}>
                   <div className={classes.agendaItemInputContainer}>
                     <div className={classes.textFieldContainer}>
                       <InputLabel shrink htmlFor="input-room-name">

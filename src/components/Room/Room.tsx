@@ -84,20 +84,18 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
     const timer = setTimeout(function() {
       const timeElapsed = durationInSeconds - timerClock;
       const currentProgress = (timeElapsed / durationInSeconds) * 100;
+
+      if (currentProgress > 100) return;
   
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
+
+      if (progress === 0) setOpen(true); 
 
       if (agendaPointOverallDurations.indexOf(timeElapsed) !== -1) {
         setOpen(true);
         setCurrentAgendaPointIndex(currentAgendaPointIndex + 1);
       };
-
-      // 
-      // console.log('currentProgress', currentProgress);
-      // if (currentProgress === 98) setOpen(true);
-      // if (currentProgress === 100) room!.disconnect();
-      // 
 
     }, 1000)
   
@@ -125,7 +123,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
             <div className={classes.snackbarRoot} >
               <Snackbar 
                 open={open} 
-                autoHideDuration={6000} 
+                autoHideDuration={9000} 
                 onClose={handleClose}
                 anchorOrigin={{
                   vertical: "top",
@@ -134,12 +132,10 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
               >
                 <Alert onClose={handleClose} severity="info">
                   {
-                    agendaItems[currentAgendaPointIndex] ?
+                    agendaItems[currentAgendaPointIndex] ? 
                     `Please move onto next topic: ${agendaItems[currentAgendaPointIndex].description}` 
-                    : 'Meeting Adjourned - Disconnecting...'
+                    : 'Meeting Adjourned!'
                   }
-                  {/* check for if (agendaItems[currentAgendaPointIndex].description) */}
-                  {/* if it doesn't exist, we say 'Meeting Adjourned' */}
                 </Alert>
               </Snackbar>
             </div>

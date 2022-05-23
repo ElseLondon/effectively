@@ -80,11 +80,9 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
   const [[hrs, mins, secs], setTime] = useState([hours, minutes, seconds]);
 
-  const reset = () => setTime([hours, minutes, seconds]);
-
   const tick = () => {
     if (hrs === 0 && mins === 0 && secs === 0) {
-      reset();
+      return;
     } else if (mins === 0 && secs === 0) {
       setTime([hrs - 1, 59, 59]);
     } else if (secs === 0) {

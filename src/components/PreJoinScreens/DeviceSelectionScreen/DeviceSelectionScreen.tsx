@@ -128,6 +128,7 @@ export default function DeviceSelectionScreen({
           meeting_host: name,
         }
       });
+
     } else {
       allRoomAgendas = await getRoomAgenda(roomName);
       setRoomAgendaInAppState({ 
@@ -138,6 +139,7 @@ export default function DeviceSelectionScreen({
           meeting_host: name,
         }
       });
+      
     };
 
     getToken(
