@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, /* useEffect */ } from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
@@ -11,6 +11,7 @@ import { RoomAgenda } from './state';
 
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
+// import useVideoContext from './hooks/useVideoContext/useVideoContext';
 
 
 const Container = styled('div')({
@@ -28,6 +29,7 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 }));
 
 export default function App() {
+  // const { room } = useVideoContext();
   const roomState = useRoomState();
   const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({
     'default': {
@@ -36,6 +38,13 @@ export default function App() {
       meeting_started: false,
       meeting_host: '',
     }});
+
+  // useEffect(() => {
+  //   const interval = setInterval(async () => {
+  //     console.log('runs once a second');
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // 
   // through useEffects - only run them: 

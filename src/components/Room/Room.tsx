@@ -53,6 +53,28 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
+const getRoomAgenda = async(room_name: string) => {
+  // return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
+  return fetch('http://localhost:8080/getRoomAgenda', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ room_name }),
+  }).then(async res => res.json());
+};
+
+// const startMeetingTimer = async(room_name: string) => {
+//   // return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
+//   return fetch('http://localhost:8080/getRoomAgenda', {
+//     method: 'POST',
+//     headers: {
+//       'content-type': 'application/json',
+//     },
+//     body: JSON.stringify({ room_name }),
+//   }).then(async res => res.json());
+// };
+
 export default function Room({ roomAgendaInAppState }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
@@ -66,6 +88,23 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   const [agendaPointOverallDurations, setAgendaPointOverallDurations] = useState<number[]>([])
   const [currentAgendaPointIndex, setCurrentAgendaPointIndex] = useState<number>(0);
   const [open, setOpen] = useState(false);
+  // //
+  const [meetingStarted, setMeetingStarted] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      if (meetingStarted) return;
+
+      const roomAgenda = await getRoomAgenda(room!.name);
+      const apiCallMeetingStatusSetToTrue = roomAgenda[room!.name].meeting_started;
+
+      if (apiCallMeetingStatusSetToTrue) setMeetingStarted(true);
+
+      console.log('apiCallMeetingStatusSetToTrue', apiCallMeetingStatusSetToTrue);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+  // //
 
   useEffect(() => {
     let overallDuration = 0;

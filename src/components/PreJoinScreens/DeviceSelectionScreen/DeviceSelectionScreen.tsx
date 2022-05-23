@@ -135,11 +135,11 @@ export default function DeviceSelectionScreen({
         [roomName]: { 
           room_duration: allRoomAgendas[roomName] ? allRoomAgendas[roomName].room_duration : 0,
           agenda_items: allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : [],
+          meeting_host: allRoomAgendas[roomName] ? allRoomAgendas[roomName].meeting_host : "",
           meeting_started: false,
-          meeting_host: name,
         }
       });
-      
+
     };
 
     getToken(

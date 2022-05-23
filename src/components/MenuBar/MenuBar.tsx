@@ -13,6 +13,7 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import { RoomAgenda } from '../../state';
+import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,6 +61,9 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
+    startMeetingButton: {
+      marginRight: '15px'
+    }
   })
 );
 
@@ -73,8 +77,15 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
-
   const duration = roomAgendaInAppState[room!.name].room_duration;
+  // 
+  const mainParticipant = useMainParticipant();
+  const roomHost = roomAgendaInAppState[room!.name].meeting_host;
+  const amIHost = roomHost === mainParticipant.identity;
+  // console.log('mainParticipant', mainParticipant.identity);
+  // console.log('roomHost', roomHost);
+  // console.log('amIHost', amIHost);
+  // 
 
   const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
@@ -135,6 +146,12 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
+                {
+                  amIHost &&
+                  <Button className={classes.startMeetingButton} variant="contained" color="primary">
+                    Start Meeting
+                  </Button>
+                }
                 <EndCallButton />
               </Grid>
             </Grid>
