@@ -3,7 +3,7 @@ import { useAppState } from '../../../state';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 import {
-  Button, Checkbox, IconButton, FormControlLabel, InputLabel, List, ListItem, 
+  Box, Button, Checkbox, IconButton, FormControlLabel, InputLabel, List, ListItem, 
   ListItemSecondaryAction, makeStyles, MenuItem, TextField, Theme, Typography,
 } from '@material-ui/core';
 
@@ -64,11 +64,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
   },
   agendaItemList: {
-    marginTop: '-25px',
-    backgroundColor: 'yellow',
+    marginTop: '-20px',
     height: '460px',
     overflowY: 'scroll',
-    border: '1px solid red'
+    border: '2px solid #fc3903'
   },
   agendaItemListItem: {
     margin: '-25px 0'
@@ -274,7 +273,8 @@ export default function RoomNameScreen({
               </IconButton>
             </div>
 
-            <List className={classes.agendaItemList}>
+            <Box className={classes.agendaItemList} borderRadius={16}>
+            <List /* className={classes.agendaItemList} */ >
               {[...Array(agendaItems.length).keys()].map((agendaItemKey) => {
                 return (
                   <ListItem className={classes.agendaItemListItem} key={agendaItemKey}>
@@ -323,6 +323,7 @@ export default function RoomNameScreen({
                 );
               })}
             </List>
+            </Box>
           </>
         ) : null}
 
