@@ -47,24 +47,14 @@ const useStyles = makeStyles((theme: Theme) => {
 
 interface RoomProps {
   roomAgendaInAppState: RoomAgenda;
+  meetingStarted: boolean;
 }
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const getRoomAgenda = async(room_name: string) => {
-  // return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
-  return fetch('http://localhost:8080/getRoomAgenda', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ room_name }),
-  }).then(async res => res.json());
-};
-
-export default function Room({ roomAgendaInAppState }: RoomProps) {
+export default function Room({ roomAgendaInAppState, meetingStarted }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { room, isBackgroundSelectionOpen } = useVideoContext();
@@ -77,23 +67,6 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   const [agendaPointOverallDurations, setAgendaPointOverallDurations] = useState<number[]>([])
   const [currentAgendaPointIndex, setCurrentAgendaPointIndex] = useState<number>(0);
   const [open, setOpen] = useState(false);
-  const [meetingStarted, setMeetingStarted] = useState(false);
-
-  // //
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (meetingStarted) return;
-
-      const roomAgenda = await getRoomAgenda(room!.name);
-      const apiCallMeetingStatusSetToTrue = roomAgenda[room!.name].meeting_started;
-
-      if (apiCallMeetingStatusSetToTrue) setMeetingStarted(true);
-
-      console.log('apiCallMeetingStatusSetToTrue', apiCallMeetingStatusSetToTrue);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-  // //
 
   useEffect(() => {
     let overallDuration = 0;
@@ -108,13 +81,14 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
   }, []);
 
   useEffect(() => {
-    // if (!meetingStarted) return;
     const timer = setTimeout(function() {
+      if (!meetingStarted) return;
+
       const timeElapsed = durationInSeconds - timerClock;
       const currentProgress = (timeElapsed / durationInSeconds) * 100;
 
       if (currentProgress > 100) return;
-  
+
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
 
@@ -128,7 +102,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
     }, 1000)
   
     return () => clearTimeout(timer);
-  }, [timerClock]);
+  }, [timerClock, meetingStarted]);
 
   const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') return;

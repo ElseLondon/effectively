@@ -6,7 +6,7 @@ import RoomNameScreen from './RoomNameScreen/RoomNameScreen';
 import { useAppState } from '../../state';
 import { useParams } from 'react-router-dom';
 import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
-import { AgendaItem } from './RoomNameScreen/RoomNameScreen';
+import { AgendaItem } from '../../types';
 import { RoomAgenda } from '../../state';
 
 export enum Steps {

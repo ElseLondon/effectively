@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
@@ -11,7 +11,8 @@ import { RoomAgenda } from './state';
 
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
-// import useVideoContext from './hooks/useVideoContext/useVideoContext';
+import useVideoContext from './hooks/useVideoContext/useVideoContext';
+import { getRoomAgenda } from './ApiCalls';
 
 
 const Container = styled('div')({
@@ -29,8 +30,9 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 }));
 
 export default function App() {
-  // const { room } = useVideoContext();
+  const { room } = useVideoContext();
   const roomState = useRoomState();
+  const [meetingStarted, setMeetingStarted] = useState<boolean>(false);
   const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({
     'default': {
       room_duration: 0,
@@ -39,20 +41,20 @@ export default function App() {
       meeting_host: '',
     }});
 
-  // 
-  // through useEffects - only run them: 
-  // --if (roomAgendaInAppState.meeting_host !== '')
-  // --if (roomAgendaInAppState.agenda_items.length !== 0)
-  // can think of triggering timer here
-  // can think of checking for whether meeting has started here through polling the API every 0.5/1 seconds
-  // pass those down as props instead of whole roomAgendaInAppState object
-  // 
-  // useEffect(() => {
-  //   const interval = setInterval(async () => {
-  //     console.log('runs once a second');
-  //   }, 1000);
-  //   return () => clearInterval(interval);
-  // }, []);
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const roomName = Object.keys(roomAgendaInAppState)[0] || "default";
+      const roomAgendas = await getRoomAgenda(roomName);
+      const currentAgenda = roomAgendas[roomName];
+
+      if (currentAgenda) {
+        const meetingStarted = currentAgenda["meeting_started"];
+        if (meetingStarted) setMeetingStarted(true);
+      }
+      
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [room, roomAgendaInAppState]);
   // 
 
   // Here we would like the height of the main container to be the height of the viewport.
@@ -71,8 +73,14 @@ export default function App() {
           <ReconnectingNotification />
           <RecordingNotifications />
           <MobileTopMenuBar />
-          <Room roomAgendaInAppState={roomAgendaInAppState} />
-          <MenuBar roomAgendaInAppState={roomAgendaInAppState} />
+          <Room
+            roomAgendaInAppState={roomAgendaInAppState}
+            meetingStarted={meetingStarted}
+          />
+          <MenuBar 
+            roomAgendaInAppState={roomAgendaInAppState} 
+            meetingStarted={meetingStarted}
+          />
         </Main>
       )}
     </Container>

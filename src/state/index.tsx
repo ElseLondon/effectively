@@ -6,7 +6,7 @@ import useActiveSinkId from './useActiveSinkId/useActiveSinkId';
 import useFirebaseAuth from './useFirebaseAuth/useFirebaseAuth';
 import usePasscodeAuth from './usePasscodeAuth/usePasscodeAuth';
 import { User } from 'firebase';
-import { AgendaItem } from '../components/PreJoinScreens/RoomNameScreen/RoomNameScreen';
+import { AgendaItem } from '../types';
 
 export interface RoomAgenda {
   [key:string]: { 

@@ -14,6 +14,7 @@ import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import { RoomAgenda } from '../../state';
 import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
+import { startMeetingTimer } from '../../ApiCalls';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -67,42 +68,34 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-// const startMeetingTimer = async(room_name: string) => {
-//   // return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
-//   return fetch('http://localhost:8080/getRoomAgenda', {
-//     method: 'POST',
-//     headers: {
-//       'content-type': 'application/json',
-//     },
-//     body: JSON.stringify({ room_name }),
-//   }).then(async res => res.json());
-// };
-
 interface MenuBarProps {
   roomAgendaInAppState: RoomAgenda;
+  meetingStarted: boolean;
 }
 
-export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
+export default function MenuBar({ roomAgendaInAppState, meetingStarted }: MenuBarProps) {
   const classes = useStyles();
   const { isSharingScreen, toggleScreenShare } = useVideoContext();
+  const mainParticipant = useMainParticipant();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
   const { room } = useVideoContext();
   const duration = roomAgendaInAppState[room!.name].room_duration;
-  // 
-  const mainParticipant = useMainParticipant();
   const roomHost = roomAgendaInAppState[room!.name].meeting_host;
   const amIHost = roomHost === mainParticipant.identity;
-  // console.log('mainParticipant', mainParticipant.identity);
-  // console.log('roomHost', roomHost);
-  // console.log('amIHost', amIHost);
-  // 
 
+  // refactor/extract
   const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
+  // 
+
   const [[hrs, mins, secs], setTime] = useState([hours, minutes, seconds]);
 
+  // refactor/extract
   const tick = () => {
+    console.log('roomHost', roomHost);
+    if (!meetingStarted) return;
+
     if (hrs === 0 && mins === 0 && secs === 0) {
       return;
     } else if (mins === 0 && secs === 0) {
@@ -113,6 +106,7 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
       setTime([hrs, mins, secs - 1]);
     }
   };
+  // 
 
   useEffect(() => {
     const timerId = setInterval(() => tick(), 1000);
@@ -126,9 +120,18 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
       ${s.toString().padStart(2, '0')}`
   };
 
-  const startMeeting = () => {
+  const startMeeting = async () => {
+    await startMeetingTimer(room!.name);
     console.log('Starting meeting...');
   }
+
+  const meetingParticipantStatus = (meetingStarted: boolean) => {
+    return (
+      meetingStarted ?
+      null :
+      <p className={classes.startMeetingButton}>Waiting for {roomHost} to start meeting...</p>
+    );
+  };
 
   return (
     <>
@@ -162,16 +165,17 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
                 {
-                  amIHost &&
+                  amIHost ?
                   <Button
                     className={classes.startMeetingButton} 
                     variant="contained" 
                     color="primary"
                     onClick={startMeeting}
-                    // disabled // disable it if meeting is started
+                    disabled={meetingStarted}
                   >
                     Start Meeting
                   </Button>
+                  : meetingParticipantStatus(meetingStarted)
                 }
                 <EndCallButton />
               </Grid>

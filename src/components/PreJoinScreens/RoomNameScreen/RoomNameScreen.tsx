@@ -6,6 +6,7 @@ import {
   Box, Button, Checkbox, IconButton, FormControlLabel, InputLabel, List, ListItem, 
   ListItemSecondaryAction, makeStyles, MenuItem, TextField, Theme, Typography,
 } from '@material-ui/core';
+import { AgendaItem } from '../../../types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -79,11 +80,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 40
   },
 }));
-
-export interface AgendaItem {
-  description: string;
-  duration: number;
-}
 
 interface RoomNameScreenProps {
   name: string;
@@ -245,9 +241,7 @@ export default function RoomNameScreen({
                   variant="outlined"
                   select
                 >
-                  {/* TestOption */}
                   <MenuItem value={2}>2</MenuItem>
-                  {/*  */}
                   <MenuItem value={5}>5</MenuItem>
                   <MenuItem value={10}>10</MenuItem>
                   <MenuItem value={15}>15</MenuItem>
@@ -274,7 +268,7 @@ export default function RoomNameScreen({
             </div>
 
             <Box className={classes.agendaItemList} borderRadius={16}>
-            <List /* className={classes.agendaItemList} */ >
+            <List>
               {[...Array(agendaItems.length).keys()].map((agendaItemKey) => {
                 return (
                   <ListItem className={classes.agendaItemListItem} key={agendaItemKey}>
@@ -315,7 +309,11 @@ export default function RoomNameScreen({
                   </div>
 
                   <ListItemSecondaryAction>
-                    <IconButton className={classes.agendaItemDeleteIcon} edge="end" aria-label="delete" onClick={removeAgendaItem}>
+                    <IconButton
+                      className={classes.agendaItemDeleteIcon}
+                      edge="end"
+                      aria-label="delete"
+                      onClick={removeAgendaItem}>
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>
