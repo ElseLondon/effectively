@@ -12,6 +12,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { RoomAgenda } from '../../state';
 
+
 const useStyles = makeStyles((theme: Theme) => {
   const totalMobileSidebarHeight = `${theme.sidebarMobileHeight +
     theme.sidebarMobilePadding * 2 +
@@ -46,13 +47,14 @@ const useStyles = makeStyles((theme: Theme) => {
 
 interface RoomProps {
   roomAgendaInAppState: RoomAgenda;
+  meetingStarted: boolean;
 }
 
 function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-export default function Room({ roomAgendaInAppState }: RoomProps) {
+export default function Room({ roomAgendaInAppState, meetingStarted }: RoomProps) {
   const classes = useStyles();
   const { isChatWindowOpen } = useChatContext();
   const { room, isBackgroundSelectionOpen } = useVideoContext();
@@ -72,7 +74,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
     const agendaTimeline = agendaItems.map((agendaItem) => {
       const duration = agendaItem.duration * 60;
       overallDuration = overallDuration + duration;
-      return overallDuration
+      return overallDuration;
     });
 
     setAgendaPointOverallDurations(agendaTimeline);
@@ -80,11 +82,17 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
 
   useEffect(() => {
     const timer = setTimeout(function() {
+      if (!meetingStarted) return;
+
       const timeElapsed = durationInSeconds - timerClock;
       const currentProgress = (timeElapsed / durationInSeconds) * 100;
-  
+
+      if (currentProgress > 100) return;
+
       setProgress(currentProgress);
       setTimerClock(timerClock - 1);
+
+      if (progress === 0) setOpen(true); 
 
       if (agendaPointOverallDurations.indexOf(timeElapsed) !== -1) {
         setOpen(true);
@@ -94,7 +102,7 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
     }, 1000)
   
     return () => clearTimeout(timer);
-  }, [timerClock]);
+  }, [timerClock, meetingStarted]);
 
   const handleClose = (_event?: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') return;
@@ -114,21 +122,25 @@ export default function Room({ roomAgendaInAppState }: RoomProps) {
       >  
         {
           durationInSeconds &&
-          <div className={classes.snackbarRoot} >
-            <Snackbar 
-              open={open} 
-              autoHideDuration={6000} 
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "center"
-              }}
-            >
-              <Alert onClose={handleClose} severity="info">
-                Please move onto next topic: {agendaItems[currentAgendaPointIndex].description}.
-              </Alert>
-            </Snackbar>
-          </div>
+            <div className={classes.snackbarRoot} >
+              <Snackbar 
+                open={open} 
+                autoHideDuration={9000} 
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "center"
+                }}
+              >
+                <Alert onClose={handleClose} severity="info">
+                  {
+                    agendaItems[currentAgendaPointIndex] ?
+                    `Please begin to discuss topic: ${agendaItems[currentAgendaPointIndex].description}`
+                    : 'Meeting Adjourned!'
+                  }
+                </Alert>
+              </Snackbar>
+            </div>
         }
 
         <MainParticipant />

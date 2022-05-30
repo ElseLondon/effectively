@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 import Button from '@material-ui/core/Button';
@@ -13,6 +13,7 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import { RoomAgenda } from '../../state';
+import { startMeetingTimer } from '../../ApiCalls';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -60,32 +61,36 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
+    startMeetingButton: {
+      marginRight: '15px'
+    }
   })
 );
 
 interface MenuBarProps {
   roomAgendaInAppState: RoomAgenda;
+  meetingStarted: boolean;
 }
 
-export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
+export default function MenuBar({ roomAgendaInAppState, meetingStarted }: MenuBarProps) {
   const classes = useStyles();
-  const { isSharingScreen, toggleScreenShare } = useVideoContext();
+  const { room, isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
-  const { room } = useVideoContext();
 
-  const duration = roomAgendaInAppState[room!.name].room_duration;
+  const { room_duration: duration, meeting_host: roomHost } = roomAgendaInAppState[room!.name]
+  const amIHost = roomHost === room!.localParticipant.identity;
 
   const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
-  const [[hrs, mins, secs], setTime] = React.useState([hours, minutes, seconds]);
-
-  const reset = () => setTime([hours, minutes, seconds]);
+  const [[hrs, mins, secs], setTime] = useState([hours, minutes, seconds]);
 
   const tick = () => {
-    if (hrs === 0 && mins === 0 && secs === 0) 
-      reset();
-    else if (mins === 0 && secs === 0) {
+    if (!meetingStarted) return;
+
+    if (hrs === 0 && mins === 0 && secs === 0) {
+      return;
+    } else if (mins === 0 && secs === 0) {
       setTime([hrs - 1, 59, 59]);
     } else if (secs === 0) {
       setTime([hrs, mins - 1, 59]);
@@ -104,6 +109,16 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
       ${h.toString().padStart(2, '0')}:
       ${m.toString().padStart(2, '0')}:
       ${s.toString().padStart(2, '0')}`
+  };
+
+  const startMeeting = async () => await startMeetingTimer(room!.name);
+
+  const meetingParticipantStatus = (meetingStarted: boolean) => {
+    return (
+      meetingStarted ?
+      null :
+      <p className={classes.startMeetingButton}>Waiting for {roomHost} to start meeting...</p>
+    );
   };
 
   return (
@@ -137,6 +152,19 @@ export default function MenuBar({ roomAgendaInAppState }: MenuBarProps) {
           <Hidden smDown>
             <Grid style={{ flex: 1 }}>
               <Grid container justifyContent="flex-end">
+                {
+                  amIHost ?
+                  <Button
+                    className={classes.startMeetingButton} 
+                    variant="contained" 
+                    color="primary"
+                    onClick={startMeeting}
+                    disabled={meetingStarted}
+                  >
+                    Start Meeting
+                  </Button>
+                  : meetingParticipantStatus(meetingStarted)
+                }
                 <EndCallButton />
               </Grid>
             </Grid>

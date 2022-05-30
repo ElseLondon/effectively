@@ -9,8 +9,9 @@ import ToggleVideoButton from '../../Buttons/ToggleVideoButton/ToggleVideoButton
 import { useAppState } from '../../../state';
 import useChatContext from '../../../hooks/useChatContext/useChatContext';
 import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
-import { AgendaItem } from '../RoomNameScreen/RoomNameScreen';
+import { AgendaItem } from '../../../types';
 import { RoomAgenda } from '../../../state';
+import { getRoomAgenda, setRoomAgenda } from '../../../ApiCalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
@@ -64,35 +65,6 @@ interface DeviceSelectionScreenProps {
   setRoomAgendaInAppState: (roomAgenda: RoomAgenda) => void;
 }
 
-const setRoomAgenda = async(
-  room_name: string,
-  room_duration: number,
-  agenda_items: AgendaItem[]
-) => {
-  return fetch('https://effectively-server.ew.r.appspot.com/setRoomAgenda', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      [room_name]: {
-        room_duration,
-        agenda_items
-      }
-    }),
-  }).then(async res => res.json());
-};
-
-const getRoomAgenda = async(room_name: string) => {
-  return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ room_name }),
-  }).then(async res => res.json());
-};
-
 export default function DeviceSelectionScreen({ 
   name,
   roomName,
@@ -114,21 +86,27 @@ export default function DeviceSelectionScreen({
     let allRoomAgendas;
 
     if (saveMeetingAgenda) {
-      allRoomAgendas = await setRoomAgenda(roomName, duration, agendaItems);
+      allRoomAgendas = await setRoomAgenda(name, roomName, duration, agendaItems);
       setRoomAgendaInAppState({
         [roomName]: {
           room_duration: allRoomAgendas[roomName].room_duration,
-          agenda_items: allRoomAgendas[roomName].agenda_items
+          agenda_items: allRoomAgendas[roomName].agenda_items,
+          meeting_started: false,
+          meeting_host: name,
         }
       });
+
     } else {
       allRoomAgendas = await getRoomAgenda(roomName);
       setRoomAgendaInAppState({ 
         [roomName]: { 
           room_duration: allRoomAgendas[roomName] ? allRoomAgendas[roomName].room_duration : 0,
-          agenda_items: allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : []
+          agenda_items: allRoomAgendas[roomName] ? allRoomAgendas[roomName].agenda_items : [],
+          meeting_host: allRoomAgendas[roomName] ? allRoomAgendas[roomName].meeting_host : "",
+          meeting_started: false,
         }
       });
+
     };
 
     getToken(

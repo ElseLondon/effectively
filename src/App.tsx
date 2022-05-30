@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, Theme } from '@material-ui/core/styles';
 
 import MenuBar from './components/MenuBar/MenuBar';
@@ -11,6 +11,8 @@ import { RoomAgenda } from './state';
 
 import useHeight from './hooks/useHeight/useHeight';
 import useRoomState from './hooks/useRoomState/useRoomState';
+import useVideoContext from './hooks/useVideoContext/useVideoContext';
+import { getRoomAgenda } from './ApiCalls';
 
 
 const Container = styled('div')({
@@ -28,8 +30,31 @@ const Main = styled('main')(({ theme }: { theme: Theme }) => ({
 }));
 
 export default function App() {
+  const { room } = useVideoContext();
   const roomState = useRoomState();
-  const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({ 'default': { room_duration: 0, agenda_items: [] }});
+  const [meetingStarted, setMeetingStarted] = useState<boolean>(false);
+  const [roomAgendaInAppState, setRoomAgendaInAppState] = useState<RoomAgenda>({
+    'default': {
+      room_duration: 0,
+      agenda_items: [],
+      meeting_started: false,
+      meeting_host: '',
+    }});
+
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const roomName = Object.keys(roomAgendaInAppState)[0] || "default";
+      const roomAgendas = await getRoomAgenda(roomName);
+      const currentAgenda = roomAgendas[roomName];
+
+      if (currentAgenda) {
+        const meetingStarted = currentAgenda["meeting_started"];
+        if (meetingStarted) setMeetingStarted(true);
+      }
+      
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [room, roomAgendaInAppState]);
 
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,
@@ -47,8 +72,14 @@ export default function App() {
           <ReconnectingNotification />
           <RecordingNotifications />
           <MobileTopMenuBar />
-          <Room roomAgendaInAppState={roomAgendaInAppState} />
-          <MenuBar roomAgendaInAppState={roomAgendaInAppState} />
+          <Room
+            roomAgendaInAppState={roomAgendaInAppState}
+            meetingStarted={meetingStarted}
+          />
+          <MenuBar 
+            roomAgendaInAppState={roomAgendaInAppState} 
+            meetingStarted={meetingStarted}
+          />
         </Main>
       )}
     </Container>
