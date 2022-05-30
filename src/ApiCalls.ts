@@ -1,8 +1,8 @@
 import { AgendaItem } from "./types";
 
 export const getRoomAgenda = async(room_name: string) => {
-  // return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
-  return fetch('http://localhost:8080/getRoomAgenda', {
+  return fetch('https://effectively-server.ew.r.appspot.com/getRoomAgenda', {
+  // return fetch('http://localhost:8080/getRoomAgenda', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -17,8 +17,8 @@ export const setRoomAgenda = async(
   room_duration: number,
   agenda_items: AgendaItem[]
 ) => {
-  // return fetch('https://effectively-server.ew.r.appspot.com/setRoomAgenda', {
-  return fetch('http://localhost:8080/setRoomAgenda', {
+  return fetch('https://effectively-server.ew.r.appspot.com/setRoomAgenda', {
+  // return fetch('http://localhost:8080/setRoomAgenda', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -35,8 +35,8 @@ export const setRoomAgenda = async(
 };
 
 export const startMeetingTimer = async(room_name: string) => {
-  // return fetch('https://effectively-server.ew.r.appspot.com/startMeetingTimer', {
-  return fetch('http://localhost:8080/startMeetingTimer', {
+  return fetch('https://effectively-server.ew.r.appspot.com/startMeetingTimer', {
+  // return fetch('http://localhost:8080/startMeetingTimer', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
