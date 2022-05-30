@@ -55,7 +55,6 @@ export default function App() {
     }, 1000);
     return () => clearInterval(interval);
   }, [room, roomAgendaInAppState]);
-  // 
 
   // Here we would like the height of the main container to be the height of the viewport.
   // On some mobile browsers, 'height: 100vh' sets the height equal to that of the screen,

@@ -95,8 +95,6 @@ interface RoomNameScreenProps {
   handleSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-
-
 export default function RoomNameScreen({ 
   name, 
   roomName, 

@@ -47,7 +47,7 @@ export type RecordingRule = {
 
 export type RecordingRules = RecordingRule[];
 
-export interface AgendaItem { // refactor to types.ts
+export interface AgendaItem {
   description: string;
   duration: number;
 };
