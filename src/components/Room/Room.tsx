@@ -134,8 +134,8 @@ export default function Room({ roomAgendaInAppState, meetingStarted }: RoomProps
               >
                 <Alert onClose={handleClose} severity="info">
                   {
-                    agendaItems[currentAgendaPointIndex] ? 
-                    `Please move onto next topic: ${agendaItems[currentAgendaPointIndex].description}` 
+                    agendaItems[currentAgendaPointIndex] ?
+                    `Please begin to discuss topic: ${agendaItems[currentAgendaPointIndex].description}`
                     : 'Meeting Adjourned!'
                   }
                 </Alert>
