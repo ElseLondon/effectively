@@ -78,16 +78,13 @@ export default function MenuBar({ roomAgendaInAppState, meetingStarted }: MenuBa
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
 
-  const duration = roomAgendaInAppState[room!.name].room_duration;
-  const roomHost = roomAgendaInAppState[room!.name].meeting_host;
+  const { room_duration: duration, meeting_host: roomHost } = roomAgendaInAppState[room!.name]
   const amIHost = roomHost === room!.localParticipant.identity;
 
-  //
   const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
   const [[hrs, mins, secs], setTime] = useState([hours, minutes, seconds]);
 
-  //
   const tick = () => {
     if (!meetingStarted) return;
 
@@ -101,7 +98,6 @@ export default function MenuBar({ roomAgendaInAppState, meetingStarted }: MenuBa
       setTime([hrs, mins, secs - 1]);
     }
   };
-  // 
 
   useEffect(() => {
     const timerId = setInterval(() => tick(), 1000);
