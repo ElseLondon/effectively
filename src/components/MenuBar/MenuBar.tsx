@@ -13,7 +13,6 @@ import ToggleChatButton from '../Buttons/ToggleChatButton/ToggleChatButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
 import { RoomAgenda } from '../../state';
-import useMainParticipant from '../../hooks/useMainParticipant/useMainParticipant';
 import { startMeetingTimer } from '../../ApiCalls';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,25 +74,21 @@ interface MenuBarProps {
 
 export default function MenuBar({ roomAgendaInAppState, meetingStarted }: MenuBarProps) {
   const classes = useStyles();
-  const { isSharingScreen, toggleScreenShare } = useVideoContext();
-  const mainParticipant = useMainParticipant();
+  const { room, isSharingScreen, toggleScreenShare } = useVideoContext();
   const roomState = useRoomState();
   const isReconnecting = roomState === 'reconnecting';
-  const { room } = useVideoContext();
+
   const duration = roomAgendaInAppState[room!.name].room_duration;
   const roomHost = roomAgendaInAppState[room!.name].meeting_host;
-  const amIHost = roomHost === mainParticipant.identity;
+  const amIHost = roomHost === room!.localParticipant.identity;
 
-  // refactor/extract
+  //
   const hoursMinSecs = { hours:0, minutes: duration, seconds: 0 };
   const { hours = 0, minutes = 0, seconds = 60 } = hoursMinSecs;
-  // 
-
   const [[hrs, mins, secs], setTime] = useState([hours, minutes, seconds]);
 
-  // refactor/extract
+  //
   const tick = () => {
-    console.log('roomHost', roomHost);
     if (!meetingStarted) return;
 
     if (hrs === 0 && mins === 0 && secs === 0) {
@@ -120,10 +115,7 @@ export default function MenuBar({ roomAgendaInAppState, meetingStarted }: MenuBa
       ${s.toString().padStart(2, '0')}`
   };
 
-  const startMeeting = async () => {
-    await startMeetingTimer(room!.name);
-    console.log('Starting meeting...');
-  }
+  const startMeeting = async () => await startMeetingTimer(room!.name);
 
   const meetingParticipantStatus = (meetingStarted: boolean) => {
     return (
